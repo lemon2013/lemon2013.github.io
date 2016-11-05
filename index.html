@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="renderer" content="webkit">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" >
+  <link rel="dns-prefetch" href="http://lemon.github.io">
+  <title>柠檬</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="放开自己，放飞梦想">
+<meta property="og:type" content="website">
+<meta property="og:title" content="柠檬">
+<meta property="og:url" content="http://lemon.github.io/index.html">
+<meta property="og:site_name" content="柠檬">
+<meta property="og:description" content="放开自己，放飞梦想">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="柠檬">
+<meta name="twitter:description" content="放开自己，放飞梦想">
+  
+    <link rel="alternative" href="/atom.xml" title="柠檬" type="application/atom+xml">
+  
+  
+    <link rel="icon" href="/assets/img/favicon.ico">
+  
+  <link rel="stylesheet" href="/main.css">
+  
+
+</head>
+
+<body>
+  <div id="container">
+    <div class="left-col">
+      <div class="overlay"></div>
+<div class="intrude-less">
+	<header id="header" class="inner">
+		<a href="/" class="profilepic">
+			
+			<img src="/assets/blogImg/litten.png" class="js-avatar">
+			
+		</a>
+
+		<hgroup>
+		  <h1 class="header-author"><a href="/">lemon</a></h1>
+		</hgroup>
+
+		
+		<p class="header-subtitle">Just do it!</p>
+		
+
+		<nav class="header-menu">
+			<ul>
+			
+				<li><a href="/">主页</a></li>
+	        
+				<li><a href="/photos">相册</a></li>
+	        
+			</ul>
+		</nav>
+		<nav class="header-smart-menu">
+	        
+    		
+    			
+    			<a class="js-smart-menu" data-idx="0" href="javascript:void(0)">所有文章</a>
+    			
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="1" href="javascript:void(0)">标签</a>
+    			
+    			
+            
+    			
+            
+    			
+    			<a class="js-smart-menu" data-idx="2" href="javascript:void(0)">关于我</a>
+    			
+    			
+            
+		</nav>
+		<nav class="header-nav">
+			<div class="social">
+				
+					<a class="github" target="_blank" href="/" title="github">github</a>
+		        
+					<a class="weibo" target="_blank" href="/" title="weibo">weibo</a>
+		        
+					<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+		        
+			</div>
+		</nav>
+	</header>		
+</div>
+
+    </div>
+    <div class="mid-col">
+      <nav id="mobile-nav">
+  	<div class="overlay">
+  		<div class="slider-trigger"><i class="icon-list"></i></div>
+  		<h1 class="header-author js-mobile-header hide">lemon</h1>
+  	</div>
+	<div class="intrude-less">
+		<header id="header" class="inner">
+			<div class="profilepic">
+				
+					<img src="/assets/blogImg/litten.png" class="js-avatar">
+				
+			</div>
+			<hgroup>
+			  <h1 class="header-author">lemon</h1>
+			</hgroup>
+			
+			<p class="header-subtitle">Just do it!</p>
+			
+			<nav class="header-menu">
+				<ul>
+				
+					<li><a href="/">主页</a></li>
+		        
+					<li><a href="/photos">相册</a></li>
+		        
+				</ul>
+			</nav>
+			<nav class="header-nav">
+				<div class="social">
+					
+						<a class="github" target="_blank" href="/" title="github">github</a>
+			        
+						<a class="weibo" target="_blank" href="/" title="weibo">weibo</a>
+			        
+						<a class="rss" target="_blank" href="/atom.xml" title="rss">rss</a>
+			        
+				</div>
+			</nav>
+		</header>				
+	</div>
+</nav>
+
+      <div class="body-wrap">
+        
+  
+    <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+  <div class="article-inner">
+    
+      <input type="hidden" class="isFancy" />
+    
+    
+      <header class="article-header">
+        
+  
+    <h1 itemprop="name">
+      <a class="article-title" href="/2016/11/05/hello-world/">CentOS7 设置静态IPv6/IPv4地址</a>
+    </h1>
+  
+
+      </header>
+    
+    <div class="article-entry" itemprop="articleBody">
+      
+        <h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1 环境准备"></a>1 环境准备</h2><p>实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统</p>
+<h3 id="1-1-Linux系统版本"><a href="#1-1-Linux系统版本" class="headerlink" title="1.1 Linux系统版本"></a>1.1 Linux系统版本</h3><p>CentOS Linux release 7.2.1511 (Core)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># cat /etc/redhat-release</span></div><div class="line">CentOS Linux release 7.2.1511 (Core)</div></pre></td></tr></table></figure></p>
+<h3 id="1-2-系统支持IPv6"><a href="#1-2-系统支持IPv6" class="headerlink" title="1.2 系统支持IPv6"></a>1.2 系统支持IPv6</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># ifconfig</span></div><div class="line">eno16777736: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</div><div class="line">        inet6 fe80::20c:29ff:fe25:c621  prefixlen 64  scopeid 0x20&lt;link&gt;</div><div class="line">        inet6 2001:250:4402:2001:20c:29ff:fe25:c621  prefixlen 64  scopeid 0x0&lt;global&gt;</div><div class="line">        ether 00:0c:29:25:c6:21  txqueuelen 1000  (Ethernet)</div><div class="line">        RX packets 21331  bytes 1432798 (1.3 MiB)</div><div class="line">        RX errors 0  dropped 0  overruns 0  frame 0</div><div class="line">        TX packets 25  bytes 3934 (3.8 KiB)</div><div class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</div></pre></td></tr></table></figure>
+<p>如图所示，可以看到系统默认的IPv6地址为2001:250:4402:2001:20c:29ff:fe25:c621</p>
+<h2 id="2-修改网络配置文件"><a href="#2-修改网络配置文件" class="headerlink" title="2 修改网络配置文件"></a>2 修改网络配置文件</h2><p>根据1.2，我们得知网卡为eno16777736，切换到目录/etc/sysconfig/network-scripts下<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># cd /etc/sysconfig/network-scripts</span></div></pre></td></tr></table></figure></p>
+<p>编辑文件 ifcfg-eno16777736<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># vim ifcfg-eno16777736</span></div><div class="line">TYPE=Ethernet</div><div class="line">BOOTPROTO=none</div><div class="line">DEFROUTE=yes</div><div class="line">IPV4_FAILURE_FATAL=no</div><div class="line">IPV6INIT=yes</div><div class="line">IPV6_AUTOCONF=no</div><div class="line">IPV6_DEFROUTE=yes</div><div class="line">IPV6_FAILURE_FATAL=no</div><div class="line">NAME=eno16777736</div><div class="line">UUID=13faf306-5205-4d3a-ac23-4699236dee95</div><div class="line">DEVICE=eno16777736</div><div class="line">ONBOOT=yes</div><div class="line">DNS1=202.197.96.1   <span class="comment">#改为自己的DNS</span></div><div class="line">IPV6ADDR=2001:250:4402:2001:20c:29ff:fe25:8888/64 <span class="comment">#静态的IPv6地址，其中64表示前缀，IPv6地址共128位</span></div><div class="line">IPADDR=49.123.106.88 <span class="comment">#设置静态的IPv4地址</span></div><div class="line">PREFIX=24</div><div class="line">GATEWAY=49.123.64.1 <span class="comment">#改为自己的网关</span></div></pre></td></tr></table></figure></p>
+<h2 id="3-重启网络"><a href="#3-重启网络" class="headerlink" title="3 重启网络"></a>3 重启网络</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">[root@localhost network-scripts]<span class="comment"># systemctl  restart network</span></div></pre></td></tr></table></figure>
+<h2 id="4-测试是否配置成功"><a href="#4-测试是否配置成功" class="headerlink" title="4 测试是否配置成功"></a>4 测试是否配置成功</h2><h3 id="4-1-通过ifconfig命令查看设置的IPv6-IPv4地址"><a href="#4-1-通过ifconfig命令查看设置的IPv6-IPv4地址" class="headerlink" title="4.1 通过ifconfig命令查看设置的IPv6/IPv4地址"></a>4.1 通过ifconfig命令查看设置的IPv6/IPv4地址</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">oot@localhost ~]<span class="comment"># ifconfig eno16777736</span></div><div class="line">eno16777736: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</div><div class="line">        inet 49.123.106.88  netmask 255.255.255.0  broadcast 49.123.106.255</div><div class="line">        inet6 2001:250:4402:2001:20c:29ff:fe25:8888  prefixlen 64  scopeid 0x0&lt;global&gt;</div><div class="line">        inet6 fe80::20c:29ff:fe25:c621  prefixlen 64  scopeid 0x20&lt;link&gt;</div><div class="line">        ether 00:0c:29:25:c6:21  txqueuelen 1000  (Ethernet)</div><div class="line">        RX packets 48420  bytes 3257418 (3.1 MiB)</div><div class="line">        RX errors 0  dropped 0  overruns 0  frame 0</div><div class="line">        TX packets 207  bytes 22061 (21.5 KiB)</div><div class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</div></pre></td></tr></table></figure>
+<h3 id="4-2-使用另外一台机器进行ping连接测试（两台机器均在同一局域网内）"><a href="#4-2-使用另外一台机器进行ping连接测试（两台机器均在同一局域网内）" class="headerlink" title="4.2 使用另外一台机器进行ping连接测试（两台机器均在同一局域网内）"></a>4.2 使用另外一台机器进行ping连接测试（两台机器均在同一局域网内）</h3><p>IPv4测试<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># ping 49.123.106.88</span></div><div class="line">PING 49.123.106.88 (49.123.106.88) 56(84) bytes of data.</div><div class="line">64 bytes from 49.123.106.88: icmp_seq=1 ttl=64 time=0.066 ms</div><div class="line">64 bytes from 49.123.106.88: icmp_seq=2 ttl=64 time=0.061 ms</div><div class="line">64 bytes from 49.123.106.88: icmp_seq=3 ttl=64 time=0.067 ms</div><div class="line">64 bytes from 49.123.106.88: icmp_seq=4 ttl=64 time=0.068 ms</div><div class="line">64 bytes from 49.123.106.88: icmp_seq=5 ttl=64 time=0.069 ms</div><div class="line">^C</div><div class="line">--- 49.123.106.88 ping statistics ---</div><div class="line">5 packets transmitted, 5 received, 0% packet loss, time 3999ms</div><div class="line">rtt min/avg/max/mdev = 0.061/0.066/0.069/0.005 ms</div></pre></td></tr></table></figure></p>
+<p>IPv6测试<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div></pre></td><td class="code"><pre><div class="line">[root@localhost network-scripts]<span class="comment"># ping6 2001:250:4402:2001:20c:29ff:fe25:8888</span></div><div class="line">PING 2001:250:4402:2001:20c:29ff:fe25:8888(2001:250:4402:2001:20c:29ff:fe25:8888) 56 data bytes</div><div class="line">64 bytes from 2001:250:4402:2001:20c:29ff:fe25:8888: icmp_seq=1 ttl=64 time=0.129 ms</div><div class="line">64 bytes from 2001:250:4402:2001:20c:29ff:fe25:8888: icmp_seq=2 ttl=64 time=0.071 ms</div><div class="line">64 bytes from 2001:250:4402:2001:20c:29ff:fe25:8888: icmp_seq=3 ttl=64 time=0.084 ms</div><div class="line">64 bytes from 2001:250:4402:2001:20c:29ff:fe25:8888: icmp_seq=4 ttl=64 time=0.063 ms</div><div class="line">^C</div><div class="line">--- 2001:250:4402:2001:20c:29ff:fe25:8888 ping statistics ---</div><div class="line">4 packets transmitted, 4 received, 0% packet loss, time 2999ms</div><div class="line">rtt min/avg/max/mdev = 0.063/0.086/0.129/0.027 ms</div></pre></td></tr></table></figure></p>
+<p>恭喜你，到此已经完成了CentOS 7的静态IPv6/IPV4配置</p>
+
+      
+    </div>
+    <div class="article-info article-info-index">
+      
+      <a href="/2016/11/05/hello-world/" class="archive-article-date">
+  	<time datetime="2016-11-05T08:19:21.763Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-05</time>
+</a>
+      
+      
+
+      <div class="clearfix"></div>
+    </div>
+  </div>
+</article>
+
+
+
+
+
+
+
+
+
+
+  
+  
+
+
+      </div>
+      <footer id="footer">
+  <div class="outer">
+    <div id="footer-info">
+    	<div class="footer-left">
+    		&copy; 2016 lemon
+    	</div>
+      	<div class="footer-right">
+      		<a href="http://hexo.io/" target="_blank">Hexo</a>  Theme <a href="https://github.com/litten/hexo-theme-yilia" target="_blank">Yilia</a> by Litten
+      	</div>
+    </div>
+  </div>
+</footer>
+    </div>
+    <script>
+	var yiliaConfig = {
+		fancybox: true,
+		mathjax: false,
+		animate: true,
+		isHome: true,
+		isPost: false,
+		isArchive: false,
+		isTag: false,
+		isCategory: false,
+		open_in_new: true,
+		root: "/",
+		innerArchive: true
+	}
+</script>
+
+<script src="/./main.js"></script>
+
+
+    
+<div class="tools-col">
+  <ul class="btn-wrap">
+    
+      <li class="chose" data-hook="tools-section-all"><span class="text">全部</span><i class="icon-book"></i></li>
+    
+    
+      <li data-hook="tools-section-tag"><span class="text">标签</span><i class="icon-price-tags"></i></li>
+    
+    
+    
+      <li data-hook="tools-section-me"><span class="text">我</span><i class="icon-smile"></i></li>
+    
+  </ul>
+  <div class="tools-wrap">
+    
+    	<section class="tools-section tools-section-all chose">
+    	</section>
+    
+
+    
+    	<section class="tools-section tools-section-tag">
+    			<div class="widget tagcloud" id="js-tagcloud">
+    				
+    			</div>
+    	</section>
+    
+
+    
+
+    
+    	<section class="tools-section tools-section-me">
+  	  	
+  	  		<div class="aboutme-wrap" id="js-aboutme">&lt;br&gt;一个热爱生活，敢于挑战的程序猿&lt;br/&gt;</div>
+  	  	
+    	</section>
+    
+  </div>
+  
+</div>
+    <!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe. 
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides. 
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" style="display:none" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo http://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div> 
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+  </div>
+</body>
+</html>
