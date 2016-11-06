@@ -8,19 +8,16 @@
   <link rel="dns-prefetch" href="https://lemon2013.github.io">
   <title>CentOS7 设置静态IPv6/IPv4地址 | 柠檬</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-  <meta name="description" content="1 环境准备实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统
-1.1 Linux系统版本CentOS Linux release 7.2.1511 (Core)12[root@localhost ~]# cat /etc/redhat-releaseCentOS Linux release 7.2.15">
+  <meta name="description" content="1 环境准备实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CentOS7 设置静态IPv6/IPv4地址">
-<meta property="og:url" content="https://lemon2013.github.io/2016/11/05/hello-world/index.html">
+<meta property="og:url" content="https://lemon2013.github.io/2016/11/06/Static-IPv6/index.html">
 <meta property="og:site_name" content="柠檬">
-<meta property="og:description" content="1 环境准备实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统
-1.1 Linux系统版本CentOS Linux release 7.2.1511 (Core)12[root@localhost ~]# cat /etc/redhat-releaseCentOS Linux release 7.2.15">
-<meta property="og:updated_time" content="2016-11-05T12:17:38.219Z">
+<meta property="og:description" content="1 环境准备实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统">
+<meta property="og:updated_time" content="2016-11-06T03:32:07.138Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="CentOS7 设置静态IPv6/IPv4地址">
-<meta name="twitter:description" content="1 环境准备实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统
-1.1 Linux系统版本CentOS Linux release 7.2.1511 (Core)12[root@localhost ~]# cat /etc/redhat-releaseCentOS Linux release 7.2.15">
+<meta name="twitter:description" content="1 环境准备实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统">
   
     <link rel="alternative" href="/atom.xml" title="柠檬" type="application/atom+xml">
   
@@ -141,7 +138,7 @@
 </nav>
 
       <div class="body-wrap">
-        <article id="post-hello-world" class="article article-type-post" itemscope itemprop="blogPost">
+        <article id="post-Static-IPv6" class="article article-type-post" itemscope itemprop="blogPost">
   <div class="article-inner">
     
       <input type="hidden" class="isFancy" />
@@ -159,7 +156,7 @@
     
     <div class="article-entry" itemprop="articleBody">
       
-        <h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1 环境准备"></a>1 环境准备</h2><p>实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统</p>
+        <h2 id="1-环境准备"><a href="#1-环境准备" class="headerlink" title="1 环境准备"></a>1 环境准备</h2><p>实验均在Vmware Workstation虚拟机上完成，上网方式选择桥接模式，保证网络支持IPv6,为了操作方便，我们使用root用户登录系统<a id="more"></a></p>
 <h3 id="1-1-Linux系统版本"><a href="#1-1-Linux系统版本" class="headerlink" title="1.1 Linux系统版本"></a>1.1 Linux系统版本</h3><p>CentOS Linux release 7.2.1511 (Core)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># cat /etc/redhat-release</span></div><div class="line">CentOS Linux release 7.2.1511 (Core)</div></pre></td></tr></table></figure></p>
 <h3 id="1-2-系统支持IPv6"><a href="#1-2-系统支持IPv6" class="headerlink" title="1.2 系统支持IPv6"></a>1.2 系统支持IPv6</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div></pre></td><td class="code"><pre><div class="line">[root@localhost ~]<span class="comment"># ifconfig</span></div><div class="line">eno16777736: flags=4163&lt;UP,BROADCAST,RUNNING,MULTICAST&gt;  mtu 1500</div><div class="line">        inet6 fe80::20c:29ff:fe25:c621  prefixlen 64  scopeid 0x20&lt;link&gt;</div><div class="line">        inet6 2001:250:4402:2001:20c:29ff:fe25:c621  prefixlen 64  scopeid 0x0&lt;global&gt;</div><div class="line">        ether 00:0c:29:25:c6:21  txqueuelen 1000  (Ethernet)</div><div class="line">        RX packets 21331  bytes 1432798 (1.3 MiB)</div><div class="line">        RX errors 0  dropped 0  overruns 0  frame 0</div><div class="line">        TX packets 25  bytes 3934 (3.8 KiB)</div><div class="line">        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0</div></pre></td></tr></table></figure>
 <p>如图所示，可以看到系统默认的IPv6地址为2001:250:4402:2001:20c:29ff:fe25:c621</p>
@@ -175,10 +172,15 @@
     </div>
     <div class="article-info article-info-index">
       
-      <a href="/2016/11/05/hello-world/" class="archive-article-date">
-  	<time datetime="2016-11-05T08:19:21.763Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-05</time>
+      <a href="/2016/11/06/Static-IPv6/" class="archive-article-date">
+  	<time datetime="2016-11-06T03:29:29.000Z" itemprop="datePublished"><i class="icon-clock"></i>2016-11-06</time>
 </a>
       
+	<div class="article-tag tagcloud">
+		<i class="icon-price-tags"></i>
+		<ul class="article-tag-list"><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/Linux/">Linux</a></li><li class="article-tag-list-item"><a class="article-tag-list-link" href="/tags/静态IPv6/">静态IPv6</a></li></ul>
+	</div>
+
       
 
       <div class="clearfix"></div>
@@ -187,6 +189,25 @@
 </article>
 
   
+<nav id="article-nav">
+  
+    <a href="/2016/11/06/配置基于IPv6的Ceph/" id="article-nav-newer" class="article-nav-link-wrap">
+      <i class="icon-circle-left"></i>
+      <div class="article-nav-title">
+        
+          配置基于IPv6的Ceph
+        
+      </div>
+    </a>
+  
+  
+    <a href="/2016/11/05/Introduction/" id="article-nav-older" class="article-nav-link-wrap">
+      <div class="article-nav-title">关于博客那点事</div>
+      <i class="icon-circle-right"></i>
+    </a>
+  
+</nav>
+
 
 
 
@@ -215,7 +236,7 @@
 
 <div class="duoshuo">
 	<!-- 多说评论框 start -->
-	<div class="ds-thread" data-thread-key="hello-world" data-title="CentOS7 设置静态IPv6/IPv4地址" data-url="https://lemon2013.github.io/2016/11/05/hello-world/"></div>
+	<div class="ds-thread" data-thread-key="Static-IPv6" data-title="CentOS7 设置静态IPv6/IPv4地址" data-url="https://lemon2013.github.io/2016/11/06/Static-IPv6/"></div>
 	<!-- 多说评论框 end -->
 	<!-- 多说公共JS代码 start (一个网页只需插入一次) -->
 	<script type="text/javascript">
@@ -292,7 +313,7 @@
     
     	<section class="tools-section tools-section-tag">
     			<div class="widget tagcloud" id="js-tagcloud">
-    				
+    				<a href="/tags/Linux/" style="font-size: 10px;">Linux</a> <a href="/tags/随记/" style="font-size: 10px;">随记</a> <a href="/tags/静态IPv6/" style="font-size: 10px;">静态IPv6</a>
     			</div>
     	</section>
     
