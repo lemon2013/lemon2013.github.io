@@ -1,0 +1,1444 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="IPv6,Ceph,云存储,单节点部署ceph,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="柠檬" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="引言为什么突然想起搭建一个基于IPv6的Ceph环境？纯属巧合，原本有一个项目需要搭建一个基于IPv6的文件系统，可惜Hadoop不支持（之前一直觉得Hadoop比较强大），几经折腾，Ceph给了我希望，好了闲话少说，直接进入正题。">
+<meta name="keywords" content="IPv6,Ceph,云存储,单节点部署ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="配置基于IPv6的单节点Ceph">
+<meta property="og:url" content="https://lemon2013.github.io/2016/11/06/配置基于IPv6的Ceph/index.html">
+<meta property="og:site_name" content="柠檬">
+<meta property="og:description" content="引言为什么突然想起搭建一个基于IPv6的Ceph环境？纯属巧合，原本有一个项目需要搭建一个基于IPv6的文件系统，可惜Hadoop不支持（之前一直觉得Hadoop比较强大），几经折腾，Ceph给了我希望，好了闲话少说，直接进入正题。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-07-14T01:19:03.226Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="配置基于IPv6的单节点Ceph">
+<meta name="twitter:description" content="引言为什么突然想起搭建一个基于IPv6的Ceph环境？纯属巧合，原本有一个项目需要搭建一个基于IPv6的文件系统，可惜Hadoop不支持（之前一直觉得Hadoop比较强大），几经折腾，Ceph给了我希望，好了闲话少说，直接进入正题。">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":8},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lemon2013.github.io/2016/11/06/配置基于IPv6的Ceph/">
+
+
+
+
+
+  <title>配置基于IPv6的单节点Ceph | 柠檬</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f806e9929dba2fe30cbf8c1f6143d9cc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">柠檬</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Just do it!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-paper-plane"></i> <br>
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lemon2013.github.io/2016/11/06/配置基于IPv6的Ceph/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lemon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/lemon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="柠檬">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">配置基于IPv6的单节点Ceph</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-06T11:33:36+08:00">
+                2016-11-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Ceph/" itemprop="url" rel="index">
+                    <span itemprop="name">Ceph</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/11/06/配置基于IPv6的Ceph/" class="leancloud_visitors" data-flag-title="配置基于IPv6的单节点Ceph">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>为什么突然想起搭建一个基于IPv6的Ceph环境？纯属巧合，原本有一个项目需要搭建一个基于IPv6的文件系统，可惜Hadoop不支持（之前一直觉得Hadoop比较强大），几经折腾，Ceph给了我希望，好了闲话少说，直接进入正题。<a id="more"></a></p>
+<h3 id="实验环境"><a href="#实验环境" class="headerlink" title="实验环境"></a>实验环境</h3><ol>
+<li>Linux操作系统版本：CentOS Linux release 7.2.1511 (Core)<ul>
+<li><a href="http://mirrors.aliyun.com/centos/7.2.1511/isos/x86_64/CentOS-7-x86_64-Minimal-1511.iso" target="_blank" rel="noopener">Minimal镜像</a> 603M左右</li>
+<li><a href="http://mirrors.aliyun.com/centos/7.2.1511/isos/x86_64/CentOS-7-x86_64-Everything-1511.iso" target="_blank" rel="noopener">Everything镜像</a> 7.2G左右</li>
+</ul>
+</li>
+<li>Ceph版本：0.94.9（hammer版本）<ol>
+<li>原本选取的为jewel最新版本，环境配置成功后，在使用Ceph的对象存储功能时，导致不能通过IPv6访问，出现类似如下错误提示,查阅资料发现是Ceph jewel版本的一个bug，正在修复，另外也给大家一个建议，在生产环境中，尽量不要选择最新版本。<blockquote>
+<p>set_ports_option:[::]8888:invalid port sport spec</p>
+</blockquote>
+</li>
+</ol>
+</li>
+</ol>
+<h2 id="预检"><a href="#预检" class="headerlink" title="预检"></a>预检</h2><h3 id="网络配置"><a href="#网络配置" class="headerlink" title="网络配置"></a>网络配置</h3><p>参考之前的一篇文章<a href="https://lemon2013.github.io/2016/11/06/Static-IPv6/">CentOS7 设置静态IPv6/IPv4地址</a>完成网络配置</p>
+<h3 id="修改主机名"><a href="#修改主机名" class="headerlink" title="修改主机名"></a>修改主机名</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># hostnamectl set-hostname ceph001 #ceph001即为你想要修改的名字</span></span><br><span class="line">[root@localhost ~]<span class="comment"># vim /etc/hosts</span></span><br><span class="line">127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4</span><br><span class="line">::1         localhost localhost.localdomain localhost6 localhost6.localdomain6</span><br><span class="line">2001:250:4402:2001:20c:29ff:fe25:8888 ceph001  <span class="comment">#新增，前面IPv6地址即主机ceph001的静态IPv6地址</span></span><br></pre></td></tr></table></figure>
+<h3 id="修改yum源"><a href="#修改yum源" class="headerlink" title="修改yum源"></a>修改yum源</h3><p>由于某些原因，可能导致官方的yum在下载软件时速度较慢，这里我们将yum源换为aliyun源<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum clean all    #清空yum源</span></span><br><span class="line">[root@localhost ~]<span class="comment"># rm -rf /etc/yum.repos.d/*.repo</span></span><br><span class="line">[root@localhost ~]<span class="comment"># wget -O /etc/yum.repos.d/CentOS-Base.repo http://mirrors.aliyun.com/repo/Centos-7.repo  #下载阿里base源</span></span><br><span class="line">[root@localhost ~]<span class="comment"># wget -O /etc/yum.repos.d/epel.repo http://mirrors.aliyun.com/repo/epel-7.repo   #下载阿里epel源</span></span><br><span class="line">[root@localhost ~]<span class="comment"># sed -i '/aliyuncs/d' /etc/yum.repos.d/CentOS-Base.repo</span></span><br><span class="line">[root@localhost ~]<span class="comment"># sed -i '/aliyuncs/d' /etc/yum.repos.d/epel.repo</span></span><br><span class="line">[root@localhost ~]<span class="comment"># sed -i 's/$releasever/7.2.1511/g' /etc/yum.repos.d/CentOS-Base.repo</span></span><br></pre></td></tr></table></figure></p>
+<p>添加ceph源<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># vim /etc/yum.repos.d/ceph.repo</span></span><br><span class="line">[ceph]</span><br><span class="line">name=ceph</span><br><span class="line">baseurl=http://mirrors.aliyun.com/ceph/rpm-hammer/el7/x86_64/  <span class="comment">#可以选择需要安装的版本</span></span><br><span class="line">gpgcheck=0</span><br><span class="line">[ceph-noarch]</span><br><span class="line">name=cephnoarch</span><br><span class="line">baseurl=http://mirrors.aliyun.com/ceph/rpm-hammer/el7/noarch/ <span class="comment">#可以选择需要安装的版本</span></span><br><span class="line">gpgcheck=0</span><br><span class="line">[root@localhost ~]<span class="comment"># yum makecache</span></span><br></pre></td></tr></table></figure></p>
+<h3 id="安装ceph与ceph-deploy"><a href="#安装ceph与ceph-deploy" class="headerlink" title="安装ceph与ceph-deploy"></a>安装ceph与ceph-deploy</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum install ceph ceph-deploy</span></span><br><span class="line">Loaded plugins: fastestmirror, langpacks</span><br><span class="line">Loading mirror speeds from cached hostfile</span><br><span class="line">Resolving Dependencies</span><br><span class="line">--&gt; Running transaction check</span><br><span class="line">---&gt; Package ceph.x86_64 1:0.94.9-0.el7 will be installed</span><br><span class="line">--&gt; Processing Dependency: librbd1 = 1:0.94.9-0.el7 <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: python-rbd = 1:0.94.9-0.el7 <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: python-cephfs = 1:0.94.9-0.el7 <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: libcephfs1 = 1:0.94.9-0.el7 <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: librados2 = 1:0.94.9-0.el7 <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: python-rados = 1:0.94.9-0.el7 <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: ceph-common = 1:0.94.9-0.el7 <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: python-requests <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: python-flask <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: redhat-lsb-core <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: hdparm <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">--&gt; Processing Dependency: libcephfs.so.1()(64bit) <span class="keyword">for</span> package: 1:ceph-0.94.9-0.el7.x86_64</span><br><span class="line">.......</span><br><span class="line">Dependencies Resolved</span><br><span class="line"></span><br><span class="line">=======================================================================================</span><br><span class="line"> Package                       Arch      Version                  Repository      Size</span><br><span class="line">=======================================================================================</span><br><span class="line">Installing:</span><br><span class="line"> ceph                          x86_64    1:0.94.9-0.el7           ceph            20 M</span><br><span class="line"> ceph-deploy                   noarch    1.5.36-0                 ceph-noarch    283 k</span><br><span class="line">Installing <span class="keyword">for</span> dependencies:</span><br><span class="line"> boost-program-options         x86_64    1.53.0-25.el7            base           155 k</span><br><span class="line"> ceph-common                   x86_64    1:0.94.9-0.el7           ceph           7.2 M</span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">Transaction Summary</span><br><span class="line">=======================================================================================</span><br><span class="line">Install  2 Packages (+24 Dependent packages)</span><br><span class="line">Upgrade             (  2 Dependent packages)</span><br><span class="line"></span><br><span class="line">Total download size: 37 M</span><br><span class="line">Is this ok [y/d/N]: y</span><br><span class="line">Downloading packages:</span><br><span class="line">No Presto metadata available <span class="keyword">for</span> ceph</span><br><span class="line">warning: /var/cache/yum/x86_64/7/base/packages/boost-program-options-1.53.0-25.el7.x86_64.rpm: Header V3 RSA/SHA256 Signature, key ID f4a80eb5: NOKEY</span><br><span class="line">Public key <span class="keyword">for</span> boost-program-options-1.53.0-25.el7.x86_64.rpm is not installed</span><br><span class="line">(1/28): boost-program-options-1.53.0-25.el7.x86_64.rpm          | 155 kB  00:00:00     </span><br><span class="line">(2/28): hdparm-9.43-5.el7.x86_64.rpm                            |  83 kB  00:00:00     </span><br><span class="line">(3/28): ceph-deploy-1.5.36-0.noarch.rpm                         | 283 kB  00:00:00     </span><br><span class="line">(4/28): leveldb-1.12.0-11.el7.x86_64.rpm                        | 161 kB  00:00:00     </span><br><span class="line">...    </span><br><span class="line">---------------------------------------------------------------------------------------</span><br><span class="line">Total                                                     718 kB/s |  37 MB  00:53     </span><br><span class="line">Retrieving key from http://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-7</span><br><span class="line">Importing GPG key 0xF4A80EB5:</span><br><span class="line"> Userid     : <span class="string">"CentOS-7 Key (CentOS 7 Official Signing Key) &lt;security@centos.org&gt;"</span></span><br><span class="line"> Fingerprint: 6341 ab27 53d7 8a78 a7c2 7bb1 24c6 a8a7 f4a8 0eb5</span><br><span class="line"> From       : http://mirrors.aliyun.com/centos/RPM-GPG-KEY-CentOS-7</span><br><span class="line">Is this ok [y/N]: y</span><br><span class="line">...</span><br><span class="line">Complete!</span><br></pre></td></tr></table></figure>
+<p>验证安装版本<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># ceph-deploy --version</span></span><br><span class="line">1.5.36</span><br><span class="line">[root@localhost ~]<span class="comment"># ceph -v</span></span><br><span class="line">ceph version 0.94.9 (fe6d859066244b97b24f09d46552afc2071e6f90)</span><br></pre></td></tr></table></figure></p>
+<h3 id="安装NTP（如果是多节点还需要配置服务端与客户端），并设置selinux与firewalld"><a href="#安装NTP（如果是多节点还需要配置服务端与客户端），并设置selinux与firewalld" class="headerlink" title="安装NTP（如果是多节点还需要配置服务端与客户端），并设置selinux与firewalld"></a>安装NTP（如果是多节点还需要配置服务端与客户端），并设置selinux与firewalld</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># yum install ntp</span></span><br><span class="line">[root@localhost ~]<span class="comment"># sed -i 's/SELINUX=.*/SELINUX=disabled/' /etc/selinux/config</span></span><br><span class="line">[root@localhost ~]<span class="comment"># setenforce 0</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl stop firewalld</span></span><br><span class="line">[root@localhost ~]<span class="comment"># systemctl disable firewalld</span></span><br><span class="line">Removed symlink /etc/systemd/system/dbus-org.fedoraproject.FirewallD1.service.</span><br><span class="line">Removed symlink /etc/systemd/system/basic.target.wants/firewalld.service.</span><br></pre></td></tr></table></figure>
+<h2 id="创建Ceph集群"><a href="#创建Ceph集群" class="headerlink" title="创建Ceph集群"></a>创建Ceph集群</h2><h3 id="在管理节点（ceph001）"><a href="#在管理节点（ceph001）" class="headerlink" title="在管理节点（ceph001）"></a>在管理节点（ceph001）</h3><p>[root@ceph001 ~]# mkdir cluster<br>[root@ceph001 ~]# cd cluster/</p>
+<h3 id="创建集群"><a href="#创建集群" class="headerlink" title="创建集群"></a>创建集群</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy new ceph001</span></span><br><span class="line">[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf</span><br><span class="line">[ceph_deploy.cli][INFO  ] Invoked (1.5.36): /usr/bin/ceph-deploy new ceph001</span><br><span class="line">[ceph_deploy.cli][INFO  ] ceph-deploy options:</span><br><span class="line">[ceph_deploy.cli][INFO  ]  username                      : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  func                          : &lt;<span class="keyword">function</span> new at 0xfe0668&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  verbose                       : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  overwrite_conf                : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  quiet                         : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cd_conf                       : &lt;ceph_deploy.conf.cephdeploy.Conf instance at 0x104c680&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cluster                       : ceph</span><br><span class="line">[ceph_deploy.cli][INFO  ]  ssh_copykey                   : True</span><br><span class="line">[ceph_deploy.cli][INFO  ]  mon                           : [<span class="string">'ceph001'</span>]</span><br><span class="line">[ceph_deploy.cli][INFO  ]  public_network                : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  ceph_conf                     : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cluster_network               : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  default_release               : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  fsid                          : None</span><br><span class="line">[ceph_deploy.new][DEBUG ] Creating new cluster named ceph</span><br><span class="line">[ceph_deploy.new][INFO  ] making sure passwordless SSH succeeds</span><br><span class="line">[ceph001][DEBUG ] connected to host: ceph001 </span><br><span class="line">[ceph001][DEBUG ] detect platform information from remote host</span><br><span class="line">[ceph001][DEBUG ] detect machine <span class="built_in">type</span></span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/sbin/ip link show</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/sbin/ip addr show</span><br><span class="line">[ceph001][DEBUG ] IP addresses found: [u<span class="string">'192.168.122.1'</span>, u<span class="string">'49.123.105.124'</span>]</span><br><span class="line">[ceph_deploy.new][DEBUG ] Resolving host ceph001</span><br><span class="line">[ceph_deploy.new][DEBUG ] Monitor ceph001 at 2001:250:4402:2001:20c:29ff:fe25:8888</span><br><span class="line">[ceph_deploy.new][INFO  ] Monitors are IPv6, binding Messenger traffic on IPv6</span><br><span class="line">[ceph_deploy.new][DEBUG ] Monitor initial members are [<span class="string">'ceph001'</span>]</span><br><span class="line">[ceph_deploy.new][DEBUG ] Monitor addrs are [<span class="string">'[2001:250:4402:2001:20c:29ff:fe25:8888]'</span>]</span><br><span class="line">[ceph_deploy.new][DEBUG ] Creating a random mon key...</span><br><span class="line">[ceph_deploy.new][DEBUG ] Writing monitor keyring to ceph.mon.keyring...</span><br><span class="line">[ceph_deploy.new][DEBUG ] Writing initial config to ceph.conf...</span><br><span class="line">[root@ceph001 cluster]<span class="comment"># ll</span></span><br><span class="line">total 12</span><br><span class="line">-rw-r--r--. 1 root root  244 Nov  6 21:54 ceph.conf</span><br><span class="line">-rw-r--r--. 1 root root 3106 Nov  6 21:54 ceph-deploy-ceph.log</span><br><span class="line">-rw-------. 1 root root   73 Nov  6 21:54 ceph.mon.keyring</span><br><span class="line">[root@ceph001 cluster]<span class="comment"># cat ceph.conf </span></span><br><span class="line">[global]</span><br><span class="line">fsid = 865e6b01-b0ea-44da-87a5-26a4980aa7a8</span><br><span class="line">ms_bind_ipv6 = <span class="literal">true</span></span><br><span class="line">mon_initial_members = ceph001</span><br><span class="line">mon_host = [2001:250:4402:2001:20c:29ff:fe25:8888]</span><br><span class="line">auth_cluster_required = cephx</span><br><span class="line">auth_service_required = cephx</span><br><span class="line">auth_client_required = cephx</span><br></pre></td></tr></table></figure>
+<p>由于我们采用的单节点部署，将默认的复制备份数改为1（原本是3）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># echo "osd_pool_default_size = 1" &gt;&gt; ceph.conf</span></span><br><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy --overwrite-conf config push ceph001</span></span><br><span class="line">[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf</span><br><span class="line">[ceph_deploy.cli][INFO  ] Invoked (1.5.36): /usr/bin/ceph-deploy --overwrite-conf config push ceph001</span><br><span class="line">[ceph_deploy.cli][INFO  ] ceph-deploy options:</span><br><span class="line">[ceph_deploy.cli][INFO  ]  username                      : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  verbose                       : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  overwrite_conf                : True</span><br><span class="line">[ceph_deploy.cli][INFO  ]  subcommand                    : push</span><br><span class="line">[ceph_deploy.cli][INFO  ]  quiet                         : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cd_conf                       : &lt;ceph_deploy.conf.cephdeploy.Conf instance at 0x14f9710&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cluster                       : ceph</span><br><span class="line">[ceph_deploy.cli][INFO  ]  client                        : [<span class="string">'ceph001'</span>]</span><br><span class="line">[ceph_deploy.cli][INFO  ]  func                          : &lt;<span class="keyword">function</span> config at 0x14d42a8&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  ceph_conf                     : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  default_release               : False</span><br><span class="line">[ceph_deploy.config][DEBUG ] Pushing config to ceph001</span><br><span class="line">[ceph001][DEBUG ] connected to host: ceph001 </span><br><span class="line">[ceph001][DEBUG ] detect platform information from remote host</span><br><span class="line">[ceph001][DEBUG ] detect machine <span class="built_in">type</span></span><br><span class="line">[ceph001][DEBUG ] write cluster configuration to /etc/ceph/&#123;cluster&#125;.conf</span><br></pre></td></tr></table></figure></p>
+<h3 id="创建监控节点"><a href="#创建监控节点" class="headerlink" title="创建监控节点"></a>创建监控节点</h3><p>将ceph001作为监控节点<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy mon create-initial</span></span><br><span class="line">[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf</span><br><span class="line">[ceph_deploy.cli][INFO  ] Invoked (1.5.36): /usr/bin/ceph-deploy mon create-initial</span><br><span class="line">[ceph_deploy.cli][INFO  ] ceph-deploy options:</span><br><span class="line">[ceph_deploy.cli][INFO  ]  username                      : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  verbose                       : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  overwrite_conf                : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  subcommand                    : create-initial</span><br><span class="line">[ceph_deploy.cli][INFO  ]  quiet                         : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cd_conf                       : &lt;ceph_deploy.conf.cephdeploy.Conf instance at 0x23865a8&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cluster                       : ceph</span><br><span class="line">[ceph_deploy.cli][INFO  ]  func                          : &lt;<span class="keyword">function</span> mon at 0x237e578&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  ceph_conf                     : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  default_release               : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  keyrings                      : None</span><br><span class="line">[ceph_deploy.mon][DEBUG ] Deploying mon, cluster ceph hosts ceph001</span><br><span class="line">[ceph_deploy.mon][DEBUG ] detecting platform <span class="keyword">for</span> host ceph001 ...</span><br><span class="line">[ceph001][DEBUG ] connected to host: ceph001 </span><br><span class="line">[ceph001][DEBUG ] detect platform information from remote host</span><br><span class="line">[ceph001][DEBUG ] detect machine <span class="built_in">type</span></span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph_deploy.mon][INFO  ] distro info: CentOS Linux 7.2.1511 Core</span><br><span class="line">[ceph001][DEBUG ] determining <span class="keyword">if</span> provided host has same hostname <span class="keyword">in</span> remote</span><br><span class="line">[ceph001][DEBUG ] get remote short hostname</span><br><span class="line">[ceph001][DEBUG ] deploying mon to ceph001</span><br><span class="line">[ceph001][DEBUG ] get remote short hostname</span><br><span class="line">[ceph001][DEBUG ] remote hostname: ceph001</span><br><span class="line">[ceph001][DEBUG ] write cluster configuration to /etc/ceph/&#123;cluster&#125;.conf</span><br><span class="line">[ceph001][DEBUG ] create the mon path <span class="keyword">if</span> it does not exist</span><br><span class="line">[ceph001][DEBUG ] checking <span class="keyword">for</span> <span class="keyword">done</span> path: /var/lib/ceph/mon/ceph-ceph001/<span class="keyword">done</span></span><br><span class="line">[ceph001][DEBUG ] <span class="keyword">done</span> path does not exist: /var/lib/ceph/mon/ceph-ceph001/<span class="keyword">done</span></span><br><span class="line">[ceph001][INFO  ] creating keyring file: /var/lib/ceph/tmp/ceph-ceph001.mon.keyring</span><br><span class="line">[ceph001][DEBUG ] create the monitor keyring file</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: ceph-mon --cluster ceph --mkfs -i ceph001 --keyring /var/lib/ceph/tmp/ceph-ceph001.mon.keyring</span><br><span class="line">[ceph001][DEBUG ] ceph-mon: mon.noname<span class="_">-a</span> [2001:250:4402:2001:20c:29ff:fe25:8888]:6789/0 is <span class="built_in">local</span>, renaming to mon.ceph001</span><br><span class="line">[ceph001][DEBUG ] ceph-mon: <span class="built_in">set</span> fsid to 865e6b01-b0ea-44da-87a5-26a4980aa7a8</span><br><span class="line">[ceph001][DEBUG ] ceph-mon: created monfs at /var/lib/ceph/mon/ceph-ceph001 <span class="keyword">for</span> mon.ceph001</span><br><span class="line">[ceph001][INFO  ] unlinking keyring file /var/lib/ceph/tmp/ceph-ceph001.mon.keyring</span><br><span class="line">[ceph001][DEBUG ] create a <span class="keyword">done</span> file to avoid re-doing the mon deployment</span><br><span class="line">[ceph001][DEBUG ] create the init path <span class="keyword">if</span> it does not exist</span><br><span class="line">[ceph001][DEBUG ] locating the `service` executable...</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/sbin/service ceph -c /etc/ceph/ceph.conf start mon.ceph001</span><br><span class="line">[ceph001][DEBUG ] === mon.ceph001 === </span><br><span class="line">[ceph001][DEBUG ] Starting Ceph mon.ceph001 on ceph001...</span><br><span class="line">[ceph001][WARNIN] Running as unit ceph-mon.ceph001.1478441156.735105300.service.</span><br><span class="line">[ceph001][DEBUG ] Starting ceph-create-keys on ceph001...</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: systemctl <span class="built_in">enable</span> ceph</span><br><span class="line">[ceph001][WARNIN] ceph.service is not a native service, redirecting to /sbin/chkconfig.</span><br><span class="line">[ceph001][WARNIN] Executing /sbin/chkconfig ceph on</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: ceph --cluster=ceph --admin-daemon /var/run/ceph/ceph-mon.ceph001.asok mon_status</span><br><span class="line">[ceph001][DEBUG ] ********************************************************************************</span><br><span class="line">[ceph001][DEBUG ] status <span class="keyword">for</span> monitor: mon.ceph001</span><br><span class="line">[ceph001][DEBUG ] &#123;</span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"election_epoch"</span>: 2, </span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"extra_probe_peers"</span>: [], </span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"monmap"</span>: &#123;</span><br><span class="line">[ceph001][DEBUG ]     <span class="string">"created"</span>: <span class="string">"0.000000"</span>, </span><br><span class="line">[ceph001][DEBUG ]     <span class="string">"epoch"</span>: 1, </span><br><span class="line">[ceph001][DEBUG ]     <span class="string">"fsid"</span>: <span class="string">"865e6b01-b0ea-44da-87a5-26a4980aa7a8"</span>, </span><br><span class="line">[ceph001][DEBUG ]     <span class="string">"modified"</span>: <span class="string">"0.000000"</span>, </span><br><span class="line">[ceph001][DEBUG ]     <span class="string">"mons"</span>: [</span><br><span class="line">[ceph001][DEBUG ]       &#123;</span><br><span class="line">[ceph001][DEBUG ]         <span class="string">"addr"</span>: <span class="string">"[2001:250:4402:2001:20c:29ff:fe25:8888]:6789/0"</span>, </span><br><span class="line">[ceph001][DEBUG ]         <span class="string">"name"</span>: <span class="string">"ceph001"</span>, </span><br><span class="line">[ceph001][DEBUG ]         <span class="string">"rank"</span>: 0</span><br><span class="line">[ceph001][DEBUG ]       &#125;</span><br><span class="line">[ceph001][DEBUG ]     ]</span><br><span class="line">[ceph001][DEBUG ]   &#125;, </span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"name"</span>: <span class="string">"ceph001"</span>, </span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"outside_quorum"</span>: [], </span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"quorum"</span>: [</span><br><span class="line">[ceph001][DEBUG ]     0</span><br><span class="line">[ceph001][DEBUG ]   ], </span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"rank"</span>: 0, </span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"state"</span>: <span class="string">"leader"</span>, </span><br><span class="line">[ceph001][DEBUG ]   <span class="string">"sync_provider"</span>: []</span><br><span class="line">[ceph001][DEBUG ] &#125;</span><br><span class="line">[ceph001][DEBUG ] ********************************************************************************</span><br><span class="line">[ceph001][INFO  ] monitor: mon.ceph001 is running</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: ceph --cluster=ceph --admin-daemon /var/run/ceph/ceph-mon.ceph001.asok mon_status</span><br><span class="line">[ceph_deploy.mon][INFO  ] processing monitor mon.ceph001</span><br><span class="line">[ceph001][DEBUG ] connected to host: ceph001 </span><br><span class="line">[ceph001][DEBUG ] detect platform information from remote host</span><br><span class="line">[ceph001][DEBUG ] detect machine <span class="built_in">type</span></span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: ceph --cluster=ceph --admin-daemon /var/run/ceph/ceph-mon.ceph001.asok mon_status</span><br><span class="line">[ceph_deploy.mon][INFO  ] mon.ceph001 monitor has reached quorum!</span><br><span class="line">[ceph_deploy.mon][INFO  ] all initial monitors are running and have formed quorum</span><br><span class="line">[ceph_deploy.mon][INFO  ] Running gatherkeys...</span><br><span class="line">[ceph_deploy.gatherkeys][INFO  ] Storing keys <span class="keyword">in</span> temp directory /tmp/tmpgY2IT7</span><br><span class="line">[ceph001][DEBUG ] connected to host: ceph001 </span><br><span class="line">[ceph001][DEBUG ] detect platform information from remote host</span><br><span class="line">[ceph001][DEBUG ] detect machine <span class="built_in">type</span></span><br><span class="line">[ceph001][DEBUG ] get remote short hostname</span><br><span class="line">[ceph001][DEBUG ] fetch remote file</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/bin/ceph --connect-timeout=25 --cluster=ceph --admin-daemon=/var/run/ceph/ceph-mon.ceph001.asok mon_status</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/bin/ceph --connect-timeout=25 --cluster=ceph --name mon. --keyring=/var/lib/ceph/mon/ceph-ceph001/keyring auth get client.admin</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/bin/ceph --connect-timeout=25 --cluster=ceph --name mon. --keyring=/var/lib/ceph/mon/ceph-ceph001/keyring auth get client.bootstrap-mds</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/bin/ceph --connect-timeout=25 --cluster=ceph --name mon. --keyring=/var/lib/ceph/mon/ceph-ceph001/keyring auth get client.bootstrap-osd</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/bin/ceph --connect-timeout=25 --cluster=ceph --name mon. --keyring=/var/lib/ceph/mon/ceph-ceph001/keyring auth get client.bootstrap-rgw</span><br><span class="line">[ceph_deploy.gatherkeys][INFO  ] Storing ceph.client.admin.keyring</span><br><span class="line">[ceph_deploy.gatherkeys][INFO  ] Storing ceph.bootstrap-mds.keyring</span><br><span class="line">[ceph_deploy.gatherkeys][INFO  ] keyring <span class="string">'ceph.mon.keyring'</span> already exists</span><br><span class="line">[ceph_deploy.gatherkeys][INFO  ] Storing ceph.bootstrap-osd.keyring</span><br><span class="line">[ceph_deploy.gatherkeys][INFO  ] Storing ceph.bootstrap-rgw.keyring</span><br><span class="line">[ceph_deploy.gatherkeys][INFO  ] Destroy temp directory /tmp/tmpgY2IT7</span><br></pre></td></tr></table></figure></p>
+<p>查看集群状态<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster 865e6b01-b0ea-44da-87a5-26a4980aa7a8</span><br><span class="line">     health HEALTH_ERR</span><br><span class="line">            64 pgs stuck inactive</span><br><span class="line">            64 pgs stuck unclean</span><br><span class="line">            no osds</span><br><span class="line">     monmap e1: 1 mons at &#123;ceph001=[2001:250:4402:2001:20c:29ff:fe25:8888]:6789/0&#125;</span><br><span class="line">            election epoch 2, quorum 0 ceph001</span><br><span class="line">     osdmap e1: 0 osds: 0 up, 0 <span class="keyword">in</span></span><br><span class="line">      pgmap v2: 64 pgs, 1 pools, 0 bytes data, 0 objects</span><br><span class="line">            0 kB used, 0 kB / 0 kB avail</span><br><span class="line">                  64 creating</span><br></pre></td></tr></table></figure></p>
+<h3 id="添加OSD"><a href="#添加OSD" class="headerlink" title="添加OSD"></a>添加OSD</h3><p>查看硬盘<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy disk list ceph001</span></span><br><span class="line">[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf</span><br><span class="line">[ceph_deploy.cli][INFO  ] Invoked (1.5.36): /usr/bin/ceph-deploy disk list ceph001</span><br><span class="line">[ceph_deploy.cli][INFO  ] ceph-deploy options:</span><br><span class="line">[ceph_deploy.cli][INFO  ]  username                      : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  verbose                       : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  overwrite_conf                : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  subcommand                    : list</span><br><span class="line">[ceph_deploy.cli][INFO  ]  quiet                         : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cd_conf                       : &lt;ceph_deploy.conf.cephdeploy.Conf instance at 0x1c79bd8&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cluster                       : ceph</span><br><span class="line">[ceph_deploy.cli][INFO  ]  func                          : &lt;<span class="keyword">function</span> disk at 0x1c70e60&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  ceph_conf                     : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  default_release               : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  disk                          : [(<span class="string">'ceph001'</span>, None, None)]</span><br><span class="line">[ceph001][DEBUG ] connected to host: ceph001 </span><br><span class="line">[ceph001][DEBUG ] detect platform information from remote host</span><br><span class="line">[ceph001][DEBUG ] detect machine <span class="built_in">type</span></span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph_deploy.osd][INFO  ] Distro info: CentOS Linux 7.2.1511 Core</span><br><span class="line">[ceph_deploy.osd][DEBUG ] Listing disks on ceph001...</span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/sbin/ceph-disk list</span><br><span class="line">[ceph001][DEBUG ] /dev/sda :</span><br><span class="line">[ceph001][DEBUG ]  /dev/sda1 other, xfs, mounted on /boot</span><br><span class="line">[ceph001][DEBUG ]  /dev/sda2 other, LVM2_member</span><br><span class="line">[ceph001][DEBUG ] /dev/sdb other, unknown</span><br><span class="line">[ceph001][DEBUG ] /dev/sdc other, unknown</span><br><span class="line">[ceph001][DEBUG ] /dev/sdd other, unknown</span><br><span class="line">[ceph001][DEBUG ] /dev/sr0 other, iso9660</span><br></pre></td></tr></table></figure></p>
+<p>添加第一个OSD（/dev/sdb）<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy disk zap ceph001:/dev/sdb</span></span><br><span class="line">[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf</span><br><span class="line">[ceph_deploy.cli][INFO  ] Invoked (1.5.36): /usr/bin/ceph-deploy disk zap ceph001:/dev/sdb</span><br><span class="line">[ceph_deploy.cli][INFO  ] ceph-deploy options:</span><br><span class="line">[ceph_deploy.cli][INFO  ]  username                      : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  verbose                       : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  overwrite_conf                : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  subcommand                    : zap</span><br><span class="line">[ceph_deploy.cli][INFO  ]  quiet                         : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cd_conf                       : &lt;ceph_deploy.conf.cephdeploy.Conf instance at 0x1b14bd8&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cluster                       : ceph</span><br><span class="line">[ceph_deploy.cli][INFO  ]  func                          : &lt;<span class="keyword">function</span> disk at 0x1b0be60&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  ceph_conf                     : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  default_release               : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  disk                          : [(<span class="string">'ceph001'</span>, <span class="string">'/dev/sdb'</span>, None)]</span><br><span class="line">[ceph_deploy.osd][DEBUG ] zapping /dev/sdb on ceph001</span><br><span class="line">[ceph001][DEBUG ] connected to host: ceph001 </span><br><span class="line">[ceph001][DEBUG ] detect platform information from remote host</span><br><span class="line">[ceph001][DEBUG ] detect machine <span class="built_in">type</span></span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph_deploy.osd][INFO  ] Distro info: CentOS Linux 7.2.1511 Core</span><br><span class="line">[ceph001][DEBUG ] zeroing last few blocks of device</span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/sbin/ceph-disk zap /dev/sdb</span><br><span class="line">[ceph001][DEBUG ] Creating new GPT entries.</span><br><span class="line">[ceph001][DEBUG ] GPT data structures destroyed! You may now partition the disk using fdisk or</span><br><span class="line">[ceph001][DEBUG ] other utilities.</span><br><span class="line">[ceph001][DEBUG ] Creating new GPT entries.</span><br><span class="line">[ceph001][DEBUG ] The operation has completed successfully.</span><br><span class="line">[ceph001][WARNIN] partx: specified range &lt;1:0&gt; does not make sense</span><br></pre></td></tr></table></figure></p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy osd create ceph001:/dev/sdb</span></span><br><span class="line">[ceph_deploy.conf][DEBUG ] found configuration file at: /root/.cephdeploy.conf</span><br><span class="line">[ceph_deploy.cli][INFO  ] Invoked (1.5.36): /usr/bin/ceph-deploy osd create ceph001:/dev/sdb</span><br><span class="line">[ceph_deploy.cli][INFO  ] ceph-deploy options:</span><br><span class="line">[ceph_deploy.cli][INFO  ]  username                      : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  disk                          : [(<span class="string">'ceph001'</span>, <span class="string">'/dev/sdb'</span>, None)]</span><br><span class="line">[ceph_deploy.cli][INFO  ]  dmcrypt                       : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  verbose                       : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  bluestore                     : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  overwrite_conf                : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  subcommand                    : create</span><br><span class="line">[ceph_deploy.cli][INFO  ]  dmcrypt_key_dir               : /etc/ceph/dmcrypt-keys</span><br><span class="line">[ceph_deploy.cli][INFO  ]  quiet                         : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cd_conf                       : &lt;ceph_deploy.conf.cephdeploy.Conf instance at 0x19b6680&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  cluster                       : ceph</span><br><span class="line">[ceph_deploy.cli][INFO  ]  fs_type                       : xfs</span><br><span class="line">[ceph_deploy.cli][INFO  ]  func                          : &lt;<span class="keyword">function</span> osd at 0x19aade8&gt;</span><br><span class="line">[ceph_deploy.cli][INFO  ]  ceph_conf                     : None</span><br><span class="line">[ceph_deploy.cli][INFO  ]  default_release               : False</span><br><span class="line">[ceph_deploy.cli][INFO  ]  zap_disk                      : False</span><br><span class="line">[ceph_deploy.osd][DEBUG ] Preparing cluster ceph disks ceph001:/dev/sdb:</span><br><span class="line">[ceph001][DEBUG ] connected to host: ceph001 </span><br><span class="line">[ceph001][DEBUG ] detect platform information from remote host</span><br><span class="line">[ceph001][DEBUG ] detect machine <span class="built_in">type</span></span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph_deploy.osd][INFO  ] Distro info: CentOS Linux 7.2.1511 Core</span><br><span class="line">[ceph_deploy.osd][DEBUG ] Deploying osd to ceph001</span><br><span class="line">[ceph001][DEBUG ] write cluster configuration to /etc/ceph/&#123;cluster&#125;.conf</span><br><span class="line">[ceph_deploy.osd][DEBUG ] Preparing host ceph001 disk /dev/sdb journal None activate True</span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /usr/sbin/ceph-disk -v prepare --cluster ceph --fs-type xfs -- /dev/sdb</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-osd --cluster=ceph --show-config-value=fsid</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-conf --cluster=ceph --name=osd. --lookup osd_mkfs_options_xfs</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-conf --cluster=ceph --name=osd. --lookup osd_fs_mkfs_options_xfs</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-conf --cluster=ceph --name=osd. --lookup osd_mount_options_xfs</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-conf --cluster=ceph --name=osd. --lookup osd_fs_mount_options_xfs</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-osd --cluster=ceph --show-config-value=osd_journal_size</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-conf --cluster=ceph --name=osd. --lookup osd_cryptsetup_parameters</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-conf --cluster=ceph --name=osd. --lookup osd_dmcrypt_key_size</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/ceph-conf --cluster=ceph --name=osd. --lookup osd_dmcrypt_type</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Will colocate journal with data on /dev/sdb</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Creating journal partition num 2 size 5120 on /dev/sdb</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/sbin/sgdisk --new=2:0:5120M --change-name=2:ceph journal --partition-guid=2:ae307314-3a81-4da2-974b-b21c24d9bba1 --typecode=2:45b0969e-9b03-4f30-b4c6-b4b80ceff106 --mbrtogpt -- /dev/sdb</span><br><span class="line">[ceph001][DEBUG ] The operation has completed successfully.</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:calling partx on prepared device /dev/sdb</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:re-reading known partitions will display errors</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/sbin/partx -a /dev/sdb</span><br><span class="line">[ceph001][WARNIN] partx: /dev/sdb: error adding partition 2</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/udevadm settle</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Journal is GPT partition /dev/disk/by-partuuid/ae307314-3a81-4da2-974b-b21c24d9bba1</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Journal is GPT partition /dev/disk/by-partuuid/ae307314-3a81-4da2-974b-b21c24d9bba1</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Creating osd partition on /dev/sdb</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/sbin/sgdisk --largest-new=1 --change-name=1:ceph data --partition-guid=1:16a6298d-59bb-4190-867a-10a5b519e7c0 --typecode=1:89c57f98-2fe5-4dc0-89c1-f3ad0ceff2be -- /dev/sdb</span><br><span class="line">[ceph001][DEBUG ] The operation has completed successfully.</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:calling partx on created device /dev/sdb</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:re-reading known partitions will display errors</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/sbin/partx -a /dev/sdb</span><br><span class="line">[ceph001][WARNIN] partx: /dev/sdb: error adding partitions 1-2</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/udevadm settle</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Creating xfs fs on /dev/sdb1</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/sbin/mkfs -t xfs -f -i size=2048 -- /dev/sdb1</span><br><span class="line">[ceph001][DEBUG ] meta-data=/dev/sdb1              isize=2048   agcount=4, agsize=6225855 blks</span><br><span class="line">[ceph001][DEBUG ]          =                       sectsz=512   attr=2, projid32bit=1</span><br><span class="line">[ceph001][DEBUG ]          =                       crc=0        finobt=0</span><br><span class="line">[ceph001][DEBUG ] data     =                       bsize=4096   blocks=24903419, imaxpct=25</span><br><span class="line">[ceph001][DEBUG ]          =                       sunit=0      swidth=0 blks</span><br><span class="line">[ceph001][DEBUG ] naming   =version 2              bsize=4096   ascii-ci=0 ftype=0</span><br><span class="line">[ceph001][DEBUG ] <span class="built_in">log</span>      =internal <span class="built_in">log</span>           bsize=4096   blocks=12159, version=2</span><br><span class="line">[ceph001][DEBUG ]          =                       sectsz=512   sunit=0 blks, lazy-count=1</span><br><span class="line">[ceph001][DEBUG ] realtime =none                   extsz=4096   blocks=0, rtextents=0</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Mounting /dev/sdb1 on /var/lib/ceph/tmp/mnt.2SMGIk with options noatime,inode64</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/bin/mount -t xfs -o noatime,inode64 -- /dev/sdb1 /var/lib/ceph/tmp/mnt.2SMGIk</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Preparing osd data dir /var/lib/ceph/tmp/mnt.2SMGIk</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Creating symlink /var/lib/ceph/tmp/mnt.2SMGIk/journal -&gt; /dev/disk/by-partuuid/ae307314-3a81-4da2-974b-b21c24d9bba1</span><br><span class="line">[ceph001][WARNIN] DEBUG:ceph-disk:Unmounting /var/lib/ceph/tmp/mnt.2SMGIk</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /bin/umount -- /var/lib/ceph/tmp/mnt.2SMGIk</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/sbin/sgdisk --typecode=1:4fbd7e29-9d25-41b8-afd0-062c0ceff05d -- /dev/sdb</span><br><span class="line">[ceph001][DEBUG ] Warning: The kernel is still using the old partition table.</span><br><span class="line">[ceph001][DEBUG ] The new table will be used at the next reboot.</span><br><span class="line">[ceph001][DEBUG ] The operation has completed successfully.</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:calling partx on prepared device /dev/sdb</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:re-reading known partitions will display errors</span><br><span class="line">[ceph001][WARNIN] INFO:ceph-disk:Running <span class="built_in">command</span>: /usr/sbin/partx -a /dev/sdb</span><br><span class="line">[ceph001][WARNIN] partx: /dev/sdb: error adding partitions 1-2</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: systemctl <span class="built_in">enable</span> ceph</span><br><span class="line">[ceph001][WARNIN] ceph.service is not a native service, redirecting to /sbin/chkconfig.</span><br><span class="line">[ceph001][WARNIN] Executing /sbin/chkconfig ceph on</span><br><span class="line">[ceph001][INFO  ] checking OSD status...</span><br><span class="line">[ceph001][DEBUG ] find the location of an executable</span><br><span class="line">[ceph001][INFO  ] Running <span class="built_in">command</span>: /bin/ceph --cluster=ceph osd <span class="built_in">stat</span> --format=json</span><br><span class="line">[ceph001][WARNIN] there is 1 OSD down</span><br><span class="line">[ceph001][WARNIN] there is 1 OSD out</span><br><span class="line">[ceph_deploy.osd][DEBUG ] Host ceph001 is now ready <span class="keyword">for</span> osd use.</span><br></pre></td></tr></table></figure>
+<p>查看集群状态<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster 865e6b01-b0ea-44da-87a5-26a4980aa7a8</span><br><span class="line">     health HEALTH_WARN</span><br><span class="line">            64 pgs stuck inactive</span><br><span class="line">            64 pgs stuck unclean</span><br><span class="line">     monmap e1: 1 mons at &#123;ceph001=[2001:250:4402:2001:20c:29ff:fe25:8888]:6789/0&#125;</span><br><span class="line">            election epoch 1, quorum 0 ceph001</span><br><span class="line">     osdmap e3: 1 osds: 0 up, 0 <span class="keyword">in</span></span><br><span class="line">      pgmap v4: 64 pgs, 1 pools, 0 bytes data, 0 objects</span><br><span class="line">            0 kB used, 0 kB / 0 kB avail</span><br><span class="line">                  64 creating</span><br></pre></td></tr></table></figure></p>
+<p>继续添加其他OSD<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy disk zap ceph001:/dev/sdc</span></span><br><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy disk zap ceph001:/dev/sdd</span></span><br><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy osd create ceph001:/dev/sdc</span></span><br><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-deploy osd create ceph001:/dev/sdd</span></span><br><span class="line">[root@ceph001 cluster]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster 865e6b01-b0ea-44da-87a5-26a4980aa7a8</span><br><span class="line">     health HEALTH_WARN</span><br><span class="line">            64 pgs stuck inactive</span><br><span class="line">            64 pgs stuck unclean</span><br><span class="line">     monmap e1: 1 mons at &#123;ceph001=[2001:250:4402:2001:20c:29ff:fe25:8888]:6789/0&#125;</span><br><span class="line">            election epoch 1, quorum 0 ceph001</span><br><span class="line">     osdmap e7: 3 osds: 0 up, 0 <span class="keyword">in</span></span><br><span class="line">      pgmap v8: 64 pgs, 1 pools, 0 bytes data, 0 objects</span><br><span class="line">            0 kB used, 0 kB / 0 kB avail</span><br><span class="line">                  64 creating</span><br></pre></td></tr></table></figure></p>
+<p>重启机器，查看集群状态<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster 2818c750-8724-4a70-bb26-f01af7f6067f</span><br><span class="line">     health HEALTH_WARN</span><br><span class="line">            too few PGs per OSD (21 &lt; min 30)</span><br><span class="line">     monmap e1: 1 mons at &#123;ceph001=[2001:250:4402:2001:20c:29ff:fe25:8888]:6789/0&#125;</span><br><span class="line">            election epoch 1, quorum 0 ceph001</span><br><span class="line">     osdmap e9: 3 osds: 3 up, 3 <span class="keyword">in</span></span><br><span class="line">      pgmap v11: 64 pgs, 1 pools, 0 bytes data, 0 objects</span><br><span class="line">            102196 kB used, 284 GB / 284 GB avail</span><br><span class="line">                  64 active+clean</span><br></pre></td></tr></table></figure></p>
+<h3 id="错误处理"><a href="#错误处理" class="headerlink" title="错误处理"></a>错误处理</h3><p>我们可以看到，目前集群状态为HEALTH_WARN，存在以下警告提示<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">too few PGs per OSD (21 &lt; min 30)</span><br></pre></td></tr></table></figure></p>
+<p>增大rbd的pg数(too few PGs per OSD (21 &lt; min 30))<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph osd pool set rbd pg_num 128</span></span><br><span class="line"><span class="built_in">set</span> pool 0 pg_num to 128</span><br><span class="line">[root@ceph001 cluster]<span class="comment"># ceph osd pool set rbd pgp_num 128</span></span><br><span class="line"><span class="built_in">set</span> pool 0 pgp_num to 128</span><br></pre></td></tr></table></figure></p>
+<p>查看集群状态<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]<span class="comment"># ceph -s</span></span><br><span class="line">    cluster 2818c750-8724-4a70-bb26-f01af7f6067f</span><br><span class="line">     health HEALTH_OK</span><br><span class="line">     monmap e1: 1 mons at &#123;ceph001=[2001:250:4402:2001:20c:29ff:fe25:8888]:6789/0&#125;</span><br><span class="line">            election epoch 1, quorum 0 ceph001</span><br><span class="line">     osdmap e13: 3 osds: 3 up, 3 <span class="keyword">in</span></span><br><span class="line">      pgmap v17: 128 pgs, 1 pools, 0 bytes data, 0 objects</span><br><span class="line">            101544 kB used, 284 GB / 284 GB avail</span><br><span class="line">                 128 active+clean</span><br></pre></td></tr></table></figure></p>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><ol>
+<li>本教程只是简单的搭建了一个单节点的Ceph环境，如果要换成多节点也很简单，操作大同小异</li>
+<li>在基于IPv6的Ceph配置上，个人觉得与IPv4操作相差不大，只需要注意两点<ol>
+<li>配置静态的IPv6地址</li>
+<li>修改主机名并添加域名解析，将主机名对应于前面设置的静态IPv6地址</li>
+</ol>
+</li>
+</ol>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/img/wechart.png" alt="lemon WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/img/ali.png" alt="lemon Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      lemon
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://lemon2013.github.io/2016/11/06/配置基于IPv6的Ceph/" title="配置基于IPv6的单节点Ceph">https://lemon2013.github.io/2016/11/06/配置基于IPv6的Ceph/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/IPv6/" rel="tag"># IPv6</a>
+          
+            <a href="/tags/Ceph/" rel="tag"># Ceph</a>
+          
+            <a href="/tags/云存储/" rel="tag"># 云存储</a>
+          
+            <a href="/tags/单节点部署ceph/" rel="tag"># 单节点部署ceph</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/06/Static-IPv6/" rel="next" title="CentOS7 设置静态IPv6/IPv4地址">
+                <i class="fa fa-chevron-left"></i> CentOS7 设置静态IPv6/IPv4地址
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/11/09/Ceph对象存储-rgw-IPv6环境配置/" rel="prev" title="Ceph对象存储(rgw)的IPv6环境配置">
+                Ceph对象存储(rgw)的IPv6环境配置 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQwMC81OTY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/img/lemon.jpg" alt="lemon">
+          <p class="site-author-name" itemprop="name">lemon</p>
+           
+              <p class="site-description motion-element" itemprop="description">不仅仅是搬运工那么简单</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ceph.org.cn/" title="Ceph中国社区" target="_blank">Ceph中国社区</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ceph.com/" title="Ceph官网" target="_blank">Ceph官网</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#实验环境"><span class="nav-number">1.1.</span> <span class="nav-text">实验环境</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#预检"><span class="nav-number">2.</span> <span class="nav-text">预检</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#网络配置"><span class="nav-number">2.1.</span> <span class="nav-text">网络配置</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改主机名"><span class="nav-number">2.2.</span> <span class="nav-text">修改主机名</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#修改yum源"><span class="nav-number">2.3.</span> <span class="nav-text">修改yum源</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装ceph与ceph-deploy"><span class="nav-number">2.4.</span> <span class="nav-text">安装ceph与ceph-deploy</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#安装NTP（如果是多节点还需要配置服务端与客户端），并设置selinux与firewalld"><span class="nav-number">2.5.</span> <span class="nav-text">安装NTP（如果是多节点还需要配置服务端与客户端），并设置selinux与firewalld</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#创建Ceph集群"><span class="nav-number">3.</span> <span class="nav-text">创建Ceph集群</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#在管理节点（ceph001）"><span class="nav-number">3.1.</span> <span class="nav-text">在管理节点（ceph001）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建集群"><span class="nav-number">3.2.</span> <span class="nav-text">创建集群</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#创建监控节点"><span class="nav-number">3.3.</span> <span class="nav-text">创建监控节点</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#添加OSD"><span class="nav-number">3.4.</span> <span class="nav-text">添加OSD</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#错误处理"><span class="nav-number">3.5.</span> <span class="nav-text">错误处理</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#小结"><span class="nav-number">4.</span> <span class="nav-text">小结</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lemon</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+	  用户量
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+	  访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("NXaprDjb1bTKqT7edHYWKidU-gzGzoHsz", "SyncKG852fIyQ8vPMOC3XaEN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 6160,
+    el: 'wpac-rating',
+    color: 'fc6423'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

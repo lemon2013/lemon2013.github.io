@@ -1,0 +1,1458 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="算法,广度优先搜索,深度优先搜索,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="柠檬" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="图的表示所谓的图$G=(V,E)$，由顶点(Vertex) $V$ 和边(Edges) $E$ 组成。可以用两种标准方式来表示：  邻接链表 邻接矩阵">
+<meta name="keywords" content="算法,广度优先搜索,深度优先搜索">
+<meta property="og:type" content="article">
+<meta property="og:title" content="图搜索算法">
+<meta property="og:url" content="https://lemon2013.github.io/2017/05/27/graph-search/index.html">
+<meta property="og:site_name" content="柠檬">
+<meta property="og:description" content="图的表示所谓的图$G=(V,E)$，由顶点(Vertex) $V$ 和边(Edges) $E$ 组成。可以用两种标准方式来表示：  邻接链表 邻接矩阵">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="http://oqo3t056d.bkt.clouddn.com/graph.png">
+<meta property="og:image" content="http://oqo3t056d.bkt.clouddn.com/tiantian.png">
+<meta property="og:image" content="http://oqo3t056d.bkt.clouddn.com/graphma.png">
+<meta property="og:image" content="http://oqo3t056d.bkt.clouddn.com/bfs.png?imageMogr2/thumbnail/!25p">
+<meta property="og:image" content="http://oqo3t056d.bkt.clouddn.com/bfstree.png?imageMogr2/thumbnail/!40p">
+<meta property="og:image" content="http://oqo3t056d.bkt.clouddn.com/dfs.png?imageMogr2/thumbnail/!30p">
+<meta property="og:updated_time" content="2017-05-31T07:54:41.952Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="图搜索算法">
+<meta name="twitter:description" content="图的表示所谓的图$G=(V,E)$，由顶点(Vertex) $V$ 和边(Edges) $E$ 组成。可以用两种标准方式来表示：  邻接链表 邻接矩阵">
+<meta name="twitter:image" content="http://oqo3t056d.bkt.clouddn.com/graph.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":8},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lemon2013.github.io/2017/05/27/graph-search/">
+
+
+
+
+
+  <title>图搜索算法 | 柠檬</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f806e9929dba2fe30cbf8c1f6143d9cc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">柠檬</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Just do it!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-paper-plane"></i> <br>
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lemon2013.github.io/2017/05/27/graph-search/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lemon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/lemon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="柠檬">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">图搜索算法</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2017-05-27T16:17:49+08:00">
+                2017-05-27
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/图论/" itemprop="url" rel="index">
+                    <span itemprop="name">图论</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2017/05/27/graph-search/" class="leancloud_visitors" data-flag-title="图搜索算法">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="图的表示"><a href="#图的表示" class="headerlink" title="图的表示"></a>图的表示</h1><p>所谓的图$G=(V,E)$，由顶点(Vertex) $V$ 和边(Edges) $E$ 组成。可以用两种标准方式来表示：</p>
+<ul>
+<li>邻接链表</li>
+<li>邻接矩阵</li>
+</ul>
+<p><img src="http://oqo3t056d.bkt.clouddn.com/graph.png" alt="Alt text"><br><a id="more"></a></p>
+<p>根据图是否有向，可以将图分为有向图和无向图。</p>
+<h2 id="邻接链表"><a href="#邻接链表" class="headerlink" title="邻接链表"></a>邻接链表</h2><p><strong>邻接链表</strong>由 $|V|$ 条链表构成，即每个顶点 $V_i \in V$有一条链表，链表中存储该顶点的相邻顶点。一般来说，邻接链表更适合表示<strong>稀疏图</strong>(边的条数$|E|$ 远远小于$|V|^2$的图)。<br><img src="http://oqo3t056d.bkt.clouddn.com/tiantian.png" alt="邻接链表表示图"><br>如上图所示，图C为无向图A($G=(V,E),|V|=5,|E|=7$)的邻接链表表示，共有5条链表，且所有邻接链表的长度之和等于 $2|E|$, 即14。图D为有向图B($G=(V,E),|V|=5,|E|=7$)得邻接链表表示，邻接链表的长度之和等于 $2|E|$ 。不论是有向图还是无向图均需要的存储空间为 $\Theta(V+E)$。</p>
+<h2 id="邻接矩阵"><a href="#邻接矩阵" class="headerlink" title="邻接矩阵"></a>邻接矩阵</h2><p>对于邻接链表而言，存在一个明显的不足就是无法快速判断边$(u,v)$ 是否为图中的边，而邻接矩阵恰恰克服了这一缺陷。<br><strong>邻接矩阵</strong>，对于图$G$而言，其邻接矩阵由 $|V|\times|V|$的矩阵 $A=(a_{ij})$ 表示, 并满足以下关系:</p>
+<ul>
+<li>$a_{ij}=1 , 如果(i,j) \in E$</li>
+<li>$a_{ij}=0 , 其他$</li>
+</ul>
+<p>图E、图F分别给出了无向图与有向图的邻接矩阵表示，其空间需求皆为$\Theta(V^2)$。与邻接链表相反，邻接矩阵更适合表示<strong>稠密图</strong>(边的条数$|E|$ 接近 $|V|^2$的图)。<br><img src="http://oqo3t056d.bkt.clouddn.com/graphma.png" alt="Alt text"></p>
+<h1 id="图的遍历"><a href="#图的遍历" class="headerlink" title="图的遍历"></a>图的遍历</h1><h2 id="广度优先搜索-BFS"><a href="#广度优先搜索-BFS" class="headerlink" title="广度优先搜索(BFS)"></a>广度优先搜索(BFS)</h2><p>给定图$G = (V,E)$以及源点 $S$, 通过调用广度优先算法可以发现从源点到达的所有顶点，同时生产一颗 “<strong>广度优先搜索树</strong>”。这里我们将借助一个先进先出(FIFO)的队列 $Queue$ 实现算法。<br>下面给出该算法的文字描述：</p>
+<ol>
+<li>初始化所有顶点，将顶点标记为未访问。</li>
+<li>将顶点 $S$ 存入队列 $Queue$ 中。</li>
+<li>如果队列 $Queue$ 非空，进入下一步，否则退出。</li>
+<li>出队列 $DeQueue$ ，得到顶点 $u$，如果 $u$ 未被访问，进入下一步，否则回到步骤3。</li>
+<li>将 $u$ 标记为已访问，并将顶点 $u$ 的所有满足<strong>条件</strong>(1.未访问，2.队列中不存在该结点)的邻接结点存入$Queue$ 中,。</li>
+<li>打印顶点 $u$，跳转到步骤3.</li>
+</ol>
+<p>为了便于理解，我们结合图A中表示的无向图，源点为A，给出BFS的执行过程：<br><img src="http://oqo3t056d.bkt.clouddn.com/bfs.png?imageMogr2/thumbnail/!25p" alt="Alt text"></p>
+<p><1>. 如图(a)所示，我们初始化所有顶点状态未访问(用绿色表示)，将源点$A$存入队列 $Queue$。</1></p>
+<p><2>. 如图(b)所示，弹出$A$并将其邻接结点$B,E$加入队列中,输入$A$。</2></p>
+<p><3>. 如图(c)所示，弹出队列头部元素$B$，将其满足条件的邻接结点 $C,D$ 存入队列，输出 $B$。</3></p>
+<p><4>. 如图(d)所示，弹出队列头部元素$E$，其邻接结点均已入队列，输出 $E$。</4></p>
+<p><5>. 如图(e)所示，弹出队列头部元素$C$，其邻接结点均已入队列，输出 $C$。</5></p>
+<p><5>. 如图(f)所示，弹出队列头部元素$D$，其邻接结点均已入队列，输出 $D$。</5></p>
+<p><6>. 队列 $Queue$ 为空，终止算法。最终得到输出数列 $A,B,E,C,D$，其广度优先搜索树如下图G所示：</6></p>
+<p><img src="http://oqo3t056d.bkt.clouddn.com/bfstree.png?imageMogr2/thumbnail/!40p" alt="Alt text"></p>
+<h2 id="深度优先搜索-DFS"><a href="#深度优先搜索-DFS" class="headerlink" title="深度优先搜索(DFS)"></a>深度优先搜索(DFS)</h2><p>深度优先搜索总是对最近才发现的结点 $v$ 的出发边遍历直到结点的所有出发边均被发现，然后再“回溯”到 $v$ 的前驱结点来搜索其出发边。这里我们借助栈 $Stack$ 的思想来描述算法。<br>下面给出该算法的文字描述：</p>
+<ol>
+<li>初始化所有顶点，将顶点标记为未访问。</li>
+<li>将出发点 $S$ 压入栈 $Stack$ 中。</li>
+<li>如果栈非空，进入下一步，否则退出结束算法。</li>
+<li>弹出栈顶结点 $u$，如果 $u$ 未被访问，进入下一步，否则回到步骤3。</li>
+<li>将 $u$ 标记为已访问，并将顶点 $u$ 的所有满足<strong>条件</strong>(1.未访问，2.栈中不存在该结点)的邻接结点存入$Stack$ 中。</li>
+<li>打印结点 $u$，跳转到步骤3.</li>
+</ol>
+<p>为了更加直观的描述DFS的思路，我们结合图B 与源点 $A$ ，给出算法DFS的执行过程：<br><img src="http://oqo3t056d.bkt.clouddn.com/dfs.png?imageMogr2/thumbnail/!30p" alt="Alt text"></p>
+<h1 id="图的实现-Java"><a href="#图的实现-Java" class="headerlink" title="图的实现(Java)"></a>图的实现(Java)</h1><h2 id="邻接链表实现"><a href="#邻接链表实现" class="headerlink" title="邻接链表实现"></a>邻接链表实现</h2><h3 id="图的邻接链表表示"><a href="#图的邻接链表表示" class="headerlink" title="图的邻接链表表示"></a>图的邻接链表表示</h3><p>我们知道描述一张图有两个最基本的元素结点 $V$ 和边 $E$，在这里我们首先定义一个类Graph.java来表示图,将Vertex.java作为其内部类表示结点，实现代码如下。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.pty.graph;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.util.ArrayList;</span><br><span class="line"><span class="keyword">import</span> java.util.LinkedHashMap;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Graph</span>&lt;<span class="title">T</span>&gt; </span>&#123;</span><br><span class="line">	<span class="keyword">private</span> LinkedHashMap&lt;T, Vertex&gt; vertexs;<span class="comment">// 使用LinkedHashMap存放图中的结点，结点标识T作为key能快速查找图中是否包含某结点</span></span><br><span class="line">	<span class="keyword">private</span> LinkedHashMap&lt;T, ArrayList&lt;Vertex&gt;&gt; adjList; <span class="comment">// 采用邻接链表的方式表示图，每个结点T对应于一个ArrayList链表，存放其相邻结点。</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> numOfVertex; <span class="comment">// 图的结点数</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">int</span> numOfEdge; <span class="comment">// 图的边数</span></span><br><span class="line">	<span class="keyword">private</span> <span class="keyword">boolean</span> directed; <span class="comment">// 是否为有向图</span></span><br><span class="line"></span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="title">Graph</span><span class="params">(<span class="keyword">boolean</span> directed)</span> </span>&#123;</span><br><span class="line">		vertexs = <span class="keyword">new</span> LinkedHashMap&lt;T, Vertex&gt;();</span><br><span class="line">		numOfVertex = <span class="number">0</span>;</span><br><span class="line">		adjList = <span class="keyword">new</span> LinkedHashMap&lt;T, ArrayList&lt;Vertex&gt;&gt;();</span><br><span class="line">		<span class="keyword">this</span>.directed = directed;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="comment">//省略相应的get、set方法</span></span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 内部类，表示结点</span></span><br><span class="line"><span class="comment">	 * </span></span><br><span class="line"><span class="comment">	 * <span class="doctag">@author</span> john</span></span><br><span class="line"><span class="comment">	 *</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	<span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Vertex</span> </span>&#123;</span><br><span class="line">		<span class="keyword">private</span> T lable; <span class="comment">// 标识结点，比如A0，A1，A2,...或者1，2，3，...</span></span><br><span class="line">		<span class="keyword">private</span> <span class="keyword">boolean</span> visited; <span class="comment">// 标识结点是否被访问</span></span><br><span class="line"></span><br><span class="line">		<span class="function"><span class="keyword">public</span> <span class="title">Vertex</span><span class="params">(T tag, <span class="keyword">double</span> score)</span> </span>&#123;</span><br><span class="line">			lable = tag;</span><br><span class="line">			visited = <span class="keyword">false</span>;</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="comment">//省略相应的get、set方法</span></span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<h3 id="图的基本操作"><a href="#图的基本操作" class="headerlink" title="图的基本操作"></a>图的基本操作</h3><p><strong>添加新的结点</strong><br>每新增一个结点，将会创建一个ArrayList列表，用于存放新增结点的邻接结点。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">insertVertex</span><span class="params">(T tag)</span> </span>&#123;</span><br><span class="line">	vertexs.put(tag, <span class="keyword">new</span> Vertex(tag)); <span class="comment">//新增结点 tag，如果定点中存在该结点将会被替换最新的</span></span><br><span class="line">	adjList.put(tag, <span class="keyword">new</span> ArrayList&lt;Vertex&gt;()); <span class="comment">//每新增一个结点，将会创建一个ArrayList列表，用于存放新增结点的邻接结点。</span></span><br><span class="line">	numOfVertex++; <span class="comment">//结点数自增</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>添加新的边</strong><br>这里暂时不考虑边的权值<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">boolean</span> <span class="title">addEdges</span><span class="params">(T start, T end)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">if</span> (vertexs.containsKey(start) &amp;&amp; vertexs.containsKey(end)) &#123; <span class="comment">// 判断输入起始点是否合法</span></span><br><span class="line">		adjList.get(start).add(vertexs.get(end)); <span class="comment">// 首先获取结点start的链表，然后将其邻接结点end加入其中</span></span><br><span class="line">		<span class="keyword">if</span> (!directed) &#123; <span class="comment">//如果是无向图，则添加结束点到开始点的边</span></span><br><span class="line">			adjList.get(end).add(vertexs.get(start));</span><br><span class="line">		&#125;</span><br><span class="line">	&#125; <span class="keyword">else</span> &#123;</span><br><span class="line">		System.out.println(<span class="string">"输入结点不合法"</span>);</span><br><span class="line">		<span class="keyword">return</span> <span class="keyword">false</span>;</span><br><span class="line">	&#125;</span><br><span class="line">	<span class="keyword">return</span> <span class="keyword">true</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p><strong>测试</strong><br>打印图的链表结构<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 打印图的邻接链表</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayGraph</span><span class="params">()</span> </span>&#123;</span><br><span class="line">    System.out.println(<span class="string">"邻接链表表示如下："</span>);</span><br><span class="line">	Iterator&lt;Map.Entry&lt;T, ArrayList&lt;Vertex&gt;&gt;&gt; iterator = adjList.entrySet().iterator();</span><br><span class="line">	<span class="keyword">while</span> (iterator.hasNext()) &#123;</span><br><span class="line">		Map.Entry&lt;T, ArrayList&lt;Vertex&gt;&gt; element = iterator.next();</span><br><span class="line">		System.out.print(element.getKey() + <span class="string">":"</span>);</span><br><span class="line">		displayList(element.getValue());</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 打印链表ArrayList</span></span><br><span class="line"><span class="comment"> * </span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> list</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">displayList</span><span class="params">(ArrayList&lt;Vertex&gt; list)</span> </span>&#123;</span><br><span class="line">	<span class="keyword">int</span> size = list.size();</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">		System.out.print(list.get(i).getLable());</span><br><span class="line">		<span class="keyword">if</span> (i &lt; size - <span class="number">1</span>) &#123;</span><br><span class="line">			System.out.print(<span class="string">"--&gt;"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	System.out.println();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>测试数据(无向图A)<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.pty.graph;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="class"><span class="keyword">class</span> <span class="title">Test</span> </span>&#123;</span><br><span class="line">	<span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">void</span> <span class="title">main</span><span class="params">(String[] args)</span> </span>&#123;</span><br><span class="line">		Graph&lt;String&gt; graph = <span class="keyword">new</span> Graph&lt;String&gt;(<span class="keyword">false</span>);</span><br><span class="line">		graph.insertVertex(<span class="string">"A"</span>);</span><br><span class="line">		graph.insertVertex(<span class="string">"B"</span>);</span><br><span class="line">		graph.insertVertex(<span class="string">"C"</span>);</span><br><span class="line">		graph.insertVertex(<span class="string">"D"</span>);</span><br><span class="line">		graph.insertVertex(<span class="string">"E"</span>);</span><br><span class="line">		graph.addEdges(<span class="string">"A"</span>, <span class="string">"B"</span>);</span><br><span class="line">		graph.addEdges(<span class="string">"A"</span>, <span class="string">"E"</span>);</span><br><span class="line">		graph.addEdges(<span class="string">"B"</span>, <span class="string">"C"</span>);</span><br><span class="line">		graph.addEdges(<span class="string">"B"</span>, <span class="string">"D"</span>);</span><br><span class="line">		graph.addEdges(<span class="string">"B"</span>, <span class="string">"E"</span>);</span><br><span class="line">		graph.addEdges(<span class="string">"C"</span>, <span class="string">"D"</span>);</span><br><span class="line">		graph.addEdges(<span class="string">"D"</span>, <span class="string">"E"</span>);</span><br><span class="line">		graph.displayGraph();</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>控制台输出结果：<br>A:B–&gt;E<br>B:A–&gt;C–&gt;D–&gt;E<br>C:B–&gt;D<br>D:B–&gt;C–&gt;E<br>E:A–&gt;B–&gt;D</p>
+<h3 id="图的相关算法"><a href="#图的相关算法" class="headerlink" title="图的相关算法"></a>图的相关算法</h3><h4 id="BFS实现"><a href="#BFS实现" class="headerlink" title="BFS实现"></a>BFS实现</h4><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">BFS</span><span class="params">(T start)</span> </span>&#123;</span><br><span class="line">	ArrayList&lt;T&gt; list = <span class="keyword">new</span> ArrayList&lt;T&gt;(); <span class="comment">// 存放遍历结点数列</span></span><br><span class="line">	LinkedList&lt;Vertex&gt; tempList = <span class="keyword">new</span> LinkedList&lt;Vertex&gt;(); <span class="comment">// 辅助BFS的队列</span></span><br><span class="line">	initialize(); <span class="comment">//初始化所有结点访问属性为false</span></span><br><span class="line">	tempList.add(vertexs.get(start));</span><br><span class="line">	<span class="keyword">while</span> (!tempList.isEmpty()) &#123;</span><br><span class="line">		Vertex node = tempList.poll(); <span class="comment">// 弹出队列头</span></span><br><span class="line">		<span class="keyword">if</span> (!node.isVisited()) &#123;</span><br><span class="line">			node.setVisited(<span class="keyword">true</span>);</span><br><span class="line">			ArrayList&lt;Vertex&gt; neighbor = adjList.get(node.getLable()); <span class="comment">// 获取结点node的邻接表</span></span><br><span class="line">			<span class="keyword">int</span> size = neighbor.size();</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">				<span class="keyword">if</span> ((!neighbor.get(i).isVisited()) &amp;&amp; (!tempList.contains(neighbor.get(i)))) &#123;</span><br><span class="line">					tempList.offer(neighbor.get(i)); <span class="comment">// 将未被访问且不包含在辅助BFS队列中的结点存入队列</span></span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			list.add(node.getLable());</span><br><span class="line">		&#125;</span><br><span class="line">		&#125;</span><br><span class="line">	<span class="comment">/**</span></span><br><span class="line"><span class="comment">	 * 输出遍历序列</span></span><br><span class="line"><span class="comment">	 */</span></span><br><span class="line">	System.out.print(<span class="string">"广度优先："</span>);</span><br><span class="line">	<span class="keyword">int</span> size = list.size();</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">		System.out.print(list.get(i));</span><br><span class="line">		<span class="keyword">if</span> (i &lt; size - <span class="number">1</span>) &#123;</span><br><span class="line">			System.out.print(<span class="string">"--&gt;"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	System.out.println();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>控制台<strong>输出</strong>图A的   <strong>广度优先</strong>：A–&gt;B–&gt;E–&gt;C–&gt;D</p>
+<h3 id="DFS实现"><a href="#DFS实现" class="headerlink" title="DFS实现"></a>DFS实现</h3><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">void</span> <span class="title">DFS</span><span class="params">(T start)</span> </span>&#123;</span><br><span class="line">	ArrayList&lt;T&gt; list = <span class="keyword">new</span> ArrayList&lt;T&gt;(); <span class="comment">// 存放遍历结点数列</span></span><br><span class="line">	Stack&lt;Vertex&gt; stack = <span class="keyword">new</span> Stack&lt;Vertex&gt;(); <span class="comment">// 辅助DFS栈</span></span><br><span class="line">	initialize(); <span class="comment">// 初始化所有结点访问属性为false</span></span><br><span class="line">	stack.push(vertexs.get(start));</span><br><span class="line">	<span class="keyword">while</span> (!stack.isEmpty()) &#123;</span><br><span class="line">		Vertex node = stack.pop(); <span class="comment">//弹出栈顶元素</span></span><br><span class="line">		<span class="keyword">if</span> (!node.isVisited()) &#123;</span><br><span class="line">			node.setVisited(<span class="keyword">true</span>);</span><br><span class="line">			ArrayList&lt;Vertex&gt; neighbor = adjList.get(node.getLable()); <span class="comment">// 获取结点node的邻接表</span></span><br><span class="line">			<span class="keyword">int</span> size = neighbor.size();</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">				<span class="keyword">if</span> ((!neighbor.get(i).isVisited()) &amp;&amp; (!stack.contains(neighbor.get(i)))) <span class="comment">// 将未被访问且不包含在辅助DFS栈中的结点压入栈</span></span><br><span class="line">					stack.push(neighbor.get(i));</span><br><span class="line">			&#125;</span><br><span class="line">			list.add(node.getLable());</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	System.out.print(<span class="string">"深度优先："</span>);</span><br><span class="line">	<span class="keyword">int</span> size = list.size();</span><br><span class="line">	<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; size; i++) &#123;</span><br><span class="line">		System.out.print(list.get(i));</span><br><span class="line">		<span class="keyword">if</span> (i &lt; size - <span class="number">1</span>) &#123;</span><br><span class="line">			System.out.print(<span class="string">"--&gt;"</span>);</span><br><span class="line">		&#125;</span><br><span class="line">	&#125;</span><br><span class="line">	System.out.println();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>控制台<strong>输出</strong>图A的  <strong>深度优先</strong>：A–&gt;E–&gt;D–&gt;C–&gt;B</p>
+<h1 id="附件"><a href="#附件" class="headerlink" title="附件"></a>附件</h1><p><strong>完整代码以及相应示例图见 <a href="https://github.com/lemon2013/algorithm" target="_blank" rel="noopener">https://github.com/lemon2013/algorithm</a> </strong></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/img/wechart.png" alt="lemon WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/img/ali.png" alt="lemon Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      lemon
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://lemon2013.github.io/2017/05/27/graph-search/" title="图搜索算法">https://lemon2013.github.io/2017/05/27/graph-search/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/算法/" rel="tag"># 算法</a>
+          
+            <a href="/tags/广度优先搜索/" rel="tag"># 广度优先搜索</a>
+          
+            <a href="/tags/深度优先搜索/" rel="tag"># 深度优先搜索</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/23/Linux-foundation/" rel="next" title="Linux 常用操作">
+                <i class="fa fa-chevron-left"></i> Linux 常用操作
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/31/dynamic-programming/" rel="prev" title="动态规划之钢条切割">
+                动态规划之钢条切割 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQwMC81OTY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/img/lemon.jpg" alt="lemon">
+          <p class="site-author-name" itemprop="name">lemon</p>
+           
+              <p class="site-description motion-element" itemprop="description">不仅仅是搬运工那么简单</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ceph.org.cn/" title="Ceph中国社区" target="_blank">Ceph中国社区</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ceph.com/" title="Ceph官网" target="_blank">Ceph官网</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#图的表示"><span class="nav-number">1.</span> <span class="nav-text">图的表示</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#邻接链表"><span class="nav-number">1.1.</span> <span class="nav-text">邻接链表</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#邻接矩阵"><span class="nav-number">1.2.</span> <span class="nav-text">邻接矩阵</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图的遍历"><span class="nav-number">2.</span> <span class="nav-text">图的遍历</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#广度优先搜索-BFS"><span class="nav-number">2.1.</span> <span class="nav-text">广度优先搜索(BFS)</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#深度优先搜索-DFS"><span class="nav-number">2.2.</span> <span class="nav-text">深度优先搜索(DFS)</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#图的实现-Java"><span class="nav-number">3.</span> <span class="nav-text">图的实现(Java)</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#邻接链表实现"><span class="nav-number">3.1.</span> <span class="nav-text">邻接链表实现</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#图的邻接链表表示"><span class="nav-number">3.1.1.</span> <span class="nav-text">图的邻接链表表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图的基本操作"><span class="nav-number">3.1.2.</span> <span class="nav-text">图的基本操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#图的相关算法"><span class="nav-number">3.1.3.</span> <span class="nav-text">图的相关算法</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#BFS实现"><span class="nav-number">3.1.3.1.</span> <span class="nav-text">BFS实现</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DFS实现"><span class="nav-number">3.1.4.</span> <span class="nav-text">DFS实现</span></a></li></ol></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#附件"><span class="nav-number">4.</span> <span class="nav-text">附件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lemon</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+	  用户量
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+	  访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("NXaprDjb1bTKqT7edHYWKidU-gzGzoHsz", "SyncKG852fIyQ8vPMOC3XaEN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 6160,
+    el: 'wpac-rating',
+    color: 'fc6423'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

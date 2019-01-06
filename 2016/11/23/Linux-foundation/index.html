@@ -1,0 +1,1470 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="linux,CentOS7,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="柠檬" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="查看Linux 版本12[root@localhost ~]# cat /etc/redhat-releaseCentOS Linux release 7.2.1511 (Core) Filesystem Hierarchy Standard（FHS）">
+<meta name="keywords" content="linux,CentOS7">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Linux 常用操作">
+<meta property="og:url" content="https://lemon2013.github.io/2016/11/23/Linux-foundation/index.html">
+<meta property="og:site_name" content="柠檬">
+<meta property="og:description" content="查看Linux 版本12[root@localhost ~]# cat /etc/redhat-releaseCentOS Linux release 7.2.1511 (Core) Filesystem Hierarchy Standard（FHS）">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2017-05-28T14:55:49.759Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Linux 常用操作">
+<meta name="twitter:description" content="查看Linux 版本12[root@localhost ~]# cat /etc/redhat-releaseCentOS Linux release 7.2.1511 (Core) Filesystem Hierarchy Standard（FHS）">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":8},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lemon2013.github.io/2016/11/23/Linux-foundation/">
+
+
+
+
+
+  <title>Linux 常用操作 | 柠檬</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f806e9929dba2fe30cbf8c1f6143d9cc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">柠檬</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Just do it!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-paper-plane"></i> <br>
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lemon2013.github.io/2016/11/23/Linux-foundation/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lemon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/lemon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="柠檬">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Linux 常用操作</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2016-11-23T19:58:00+08:00">
+                2016-11-23
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/Linux-基础/" itemprop="url" rel="index">
+                    <span itemprop="name">Linux 基础</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2016/11/23/Linux-foundation/" class="leancloud_visitors" data-flag-title="Linux 常用操作">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="查看Linux-版本"><a href="#查看Linux-版本" class="headerlink" title="查看Linux 版本"></a>查看Linux 版本</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost ~]<span class="comment"># cat /etc/redhat-release</span></span><br><span class="line">CentOS Linux release 7.2.1511 (Core)</span><br></pre></td></tr></table></figure>
+<h3 id="Filesystem-Hierarchy-Standard（FHS）"><a href="#Filesystem-Hierarchy-Standard（FHS）" class="headerlink" title="Filesystem Hierarchy Standard（FHS）"></a>Filesystem Hierarchy Standard（FHS）<a id="more"></a></h3><p>Linux目录配置依据</p>
+<blockquote>
+<p>/ （root, 根目录）：与开机系统有关；<br>/usr （unix software resource）：与软件安装/执行有关；<br>/var （variable）：与系统运行过程有关。</p>
+</blockquote>
+<p>参考鸟哥的私房菜（部分）{<a href="http://oqo3t056d.bkt.clouddn.com/vbird-linux-basic-4e.pdf" target="_blank" rel="noopener">鸟哥的私房菜(第四版)</a>}</p>
+<table>
+<thead>
+<tr>
+<th>目录</th>
+<th style="text-align:center">存放内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>/bin</td>
+<td style="text-align:center">系统有很多放置可执行文件的目录，但/bin比较特殊。因为/bin放置的是在单人维护模式下还能够被操作的指令。在/bin下面的指令可以被root与一般帐号所使用，主要有：cat, chmod, chown, date, mv, mkdir, cp, bash等等常用的指令。</td>
+</tr>
+<tr>
+<td>/boot</td>
+<td style="text-align:center">这个目录主要在放置开机会使用到的文件，包括Linux核心文件以及开机菜单与开机所需配置文件等等。 Linux kernel常用的文件名为：vmlinuz，如果使用的是grub2这个开机管理程序， 则还会存在/boot/grub2/这个目录喔！</td>
+</tr>
+<tr>
+<td>/dev</td>
+<td style="text-align:center">在Linux系统上，任何设备与周边设备都是以文件的型态存在于这个目录当中的。 你只要通过存取这个目录下面的某个文件，就等于存取某个设备啰～ 比要重要的文件有/dev/null, /dev/zero, /dev/tty, /dev/loop, /dev/sd等等</td>
+</tr>
+<tr>
+<td>/etc</td>
+<td style="text-align:center">系统主要的配置文件几乎都放置在这个目录内，例如人员的帐号密码档、各种服务的启始档等等。一般来说，这个目录下的各文件属性是可以让一般使用者查阅的， 但是只有root有权力修改。FHS建议不要放置可可执行文件（binary）在这个目录中喔。比较重要的文件有： /etc/modprobe.d/,/etc/passwd, /etc/fstab, /etc/issue 等等。另外 FHS 还规范几个重要的目录最好要存在 /etc/ 目录下喔：/etc/opt（必要）：这个目录在放置第三方协力软件 /opt 的相关配置文件 /etc/X11/（建议）：与 X Window 有关的各种配置文件都在这里，尤其是 xorg.conf 这个 X Server 的配置文件。 /etc/sgml/（建议）：与 SGML 格式有关的各项配置文件 /etc/xml/（建议）：与 XML格式有关的各项配置文件</td>
+</tr>
+<tr>
+<td>/media</td>
+<td style="text-align:center">media是“媒体”的英文，顾名思义，这个/media下面放置的就是可移除的设备啦！ 包括软盘、光盘、DVD等等设备都暂时挂载于此。常见的文件名有：/media/floppy, /media/cdrom等等。</td>
+</tr>
+<tr>
+<td>/mnt</td>
+<td style="text-align:center">如果你想要暂时挂载某些额外的设备，一般建议你可以放置到这个目录中。在古早时候，这个目录的用途与/media相同啦！只是有了/media之后，这个目录就用来暂时挂载用了。</td>
+</tr>
+<tr>
+<td>/opt</td>
+<td style="text-align:center">这个是给第三方协力软件放置的目录。什么是第三方协力软件啊？ 举例来说，KDE这个桌面管理系统是一个独立的计划，不过他可以安装到Linux系统中，因此KDE的软件就建议放置到此目录下了。 另外，如果你想要自行安装额外的软件（非原本的distribution提供的），那么也能够将你的软件安装到这里来。 不过，以前的Linux系统中，我们还是习惯放置在/usr/local目录下呢！</td>
+</tr>
+<tr>
+<td>/run</td>
+<td style="text-align:center">早期的 FHS 规定系统开机后所产生的各项信息应该要放置到 /var/run 目录下，新版的 FHS 则规范到 /run 下面。 由于 /run 可以使用内存来仿真，因此性能上会好很多！</td>
+</tr>
+</tbody>
+</table>
+<h3 id="查看Linux-核心版本、位数"><a href="#查看Linux-核心版本、位数" class="headerlink" title="查看Linux 核心版本、位数"></a>查看Linux 核心版本、位数</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@localhost bin]<span class="comment"># uname -a  #全部</span></span><br><span class="line">Linux localhost.localdomain 3.10.0-327.36.1.el7.x86_64 <span class="comment">#1 SMP Sun Sep 18 13:04:29 UTC 2016 x86_64 x86_64 x86_64 GNU/Linux</span></span><br><span class="line">[root@localhost bin]<span class="comment"># uname -m  #操作位</span></span><br><span class="line">x86_64</span><br><span class="line">[root@localhost bin]<span class="comment"># uname -r  #核心版本</span></span><br><span class="line">3.10.0-327.36.1.el7.x86_64</span><br></pre></td></tr></table></figure>
+<h3 id="更改文件属性"><a href="#更改文件属性" class="headerlink" title="更改文件属性"></a>更改文件属性</h3><blockquote>
+<p>chgrp ：改变文件所属群组,存放于/etc/group<br>chown ：改变文件拥有者, 账号/etc/passwd<br>chmod ：改变文件的权限, SUID, SGID, SBIT等等的特性</p>
+</blockquote>
+<h3 id="复制操作"><a href="#复制操作" class="headerlink" title="复制操作"></a>复制操作</h3><p>cp -a 整个数据复制完全一样，包括创建时间，如果是备份的是注意权限问题<br>cp 创建时间，部分属性可能会发生改变<br>cp -r 复制目录<br>cp -l 实体链接<br>cp -s 捷径链接<br>cp -u 这个 -u 的特性，是在目标文件与来源文件有差异时，才会复制的。可以用来备份</p>
+<h3 id="文件或文件名的搜索"><a href="#文件或文件名的搜索" class="headerlink" title="文件或文件名的搜索"></a>文件或文件名的搜索</h3><h4 id="whereis"><a href="#whereis" class="headerlink" title="whereis"></a>whereis</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]<span class="comment"># whereis [-bmsu] 文件或目录名</span></span><br><span class="line">选项与参数：</span><br><span class="line">-l :可以列出 whereis 会去查询的几个主要目录而已</span><br><span class="line">-b :只找 binary 格式的文件</span><br><span class="line">-m :只找在说明文档 manual 路径下的文件</span><br><span class="line">-s :只找 <span class="built_in">source</span> 来源文件</span><br><span class="line">-u :搜寻不在上述三个项目当中的其他特殊文件</span><br><span class="line">[root@ceph001 mlocate]<span class="comment"># whereis ceph</span></span><br><span class="line">ceph: /usr/bin/ceph /usr/lib64/ceph /etc/ceph /usr/libexec/ceph /usr/share/ceph /usr/share/man/man8/ceph.8.gz</span><br></pre></td></tr></table></figure>
+<h4 id="locate"><a href="#locate" class="headerlink" title="locate"></a>locate</h4><p>根据/var/lib/mlocate/中的数据库文件进行搜索，手动更新时，updatedb 指令会去读取 /etc/updatedb.conf 这个配置文件的设置，然后再去硬盘里面进行搜寻文件名的动作， 最后就更新整个数据库文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]<span class="comment"># locate [-ir] keyword</span></span><br><span class="line">选项与参数：</span><br><span class="line">-i ：忽略大小写的差异；</span><br><span class="line">-c ：不输出文件名，仅计算找到的文件数量</span><br><span class="line">-l ：仅输出几行的意思，例如输出五行则是 -l 5</span><br><span class="line">-S ：输出 locate 所使用的数据库文件的相关信息，包括该数据库纪录的文件/目录数量等</span><br><span class="line">-r ：后面可接正则表达式的显示方式</span><br><span class="line">[root@ceph001 mlocate]<span class="comment"># locate ceph.conf</span></span><br><span class="line">/etc/ceph/ceph.conf</span><br><span class="line">/root/cluster/ceph.conf</span><br><span class="line">/usr/share/doc/ceph/sample.ceph.conf</span><br><span class="line"></span><br><span class="line">[root@ceph001 mlocate]<span class="comment"># updatedb  #手动更新数据文件</span></span><br></pre></td></tr></table></figure></p>
+<h4 id="find"><a href="#find" class="headerlink" title="find"></a>find</h4><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 ~]<span class="comment"># find [PATH] [option] [action]</span></span><br></pre></td></tr></table></figure>
+<p>选项与参数：<br>1. 与时间有关的选项：共有 -atime, -ctime 与 -mtime ，以 -mtime 说明<br>-mtime n ：n 为数字，意义为在 n 天之前的“一天之内”被更动过内容的文件；<br>-mtime +n ：列出在 n 天之前（不含 n 天本身）被更动过内容的文件文件名；<br>-mtime -n ：列出在 n 天之内（含 n 天本身）被更动过内容的文件文件名。<br>-newer file ：file 为一个存在的文件，列出比 file 还要新的文件文件名</p>
+<p>2. 与使用者或群组名称有关的参数：<br>-uid n ：n 为数字，这个数字是使用者的帐号 ID，亦即 UID ，这个 UID 是记录在<br>/etc/passwd 里面与帐号名称对应的数字。这方面我们会在第四篇介绍。<br>-gid n ：n 为数字，这个数字是群组名称的 ID，亦即 GID，这个 GID 记录在<br>/etc/group，相关的介绍我们会第四篇说明～<br>-user name ：name 为使用者帐号名称喔！例如 dmtsai<br>-group name：name 为群组名称喔，例如 users ；<br>-nouser ：寻找文件的拥有者不存在 /etc/passwd 的人！<br>-nogroup ：寻找文件的拥有群组不存在于 /etc/group 的文件！<br>当你自行安装软件时，很可能该软件的属性当中并没有文件拥有者，<br>这是可能的！在这个时候，就可以使用 -nouser 与 -nogroup 搜寻。</p>
+<p>3. 与文件权限及名称有关的参数：<br>-name filename：搜寻文件名称为 filename 的文件；<br>-size [+-]SIZE：搜寻比 SIZE 还要大（+）或小（-）的文件。这个 SIZE 的规格有：<br>c: 代表 Byte， k: 代表 1024Bytes。所以，要找比 50KB<br>还要大的文件，就是“ -size +50k ”<br>-type TYPE ：搜寻文件的类型为 TYPE 的，类型主要有：一般正规文件 （f）, 设备文件 （b, c）,<br>目录 （d）, 链接文件 （l）, socket （s）, 及 FIFO （p） 等属性。<br>-perm mode ：搜寻文件权限“刚好等于” mode 的文件，这个 mode 为类似 chmod<br>的属性值，举例来说， -rwsr-xr-x 的属性为 4755 ！<br>-perm -mode ：搜寻文件权限“必须要全部囊括 mode 的权限”的文件，举例来说，<br>我们要搜寻 -rwxr–r– ，亦即 0744 的文件，使用 -perm -0744，<br>当一个文件的权限为 -rwsr-xr-x ，亦即 4755 时，也会被列出来，<br>因为 -rwsr-xr-x 的属性已经囊括了 -rwxr–r– 的属性了。<br>-perm /mode ：搜寻文件权限“包含任一 mode 的权限”的文件，举例来说，我们搜寻<br>-rwxr-xr-x ，亦即 -perm /755 时，但一个文件属性为 -rw——-<br>也会被列出来，因为他有 -rw…. 的属性存在！</p>
+<p>4. 额外可进行的动作：<br>-exec command ：command 为其他指令，-exec 后面可再接额外的指令来处理搜寻到的结果。<br>-print ：将结果打印到屏幕上，这个动作是默认动作！</p>
+<h3 id="当前linux支持的文件系统"><a href="#当前linux支持的文件系统" class="headerlink" title="当前linux支持的文件系统"></a>当前linux支持的文件系统</h3><p>查看当前linux支持的文件系统<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">[ceph@lemon ~]$ ls -l /lib/modules/$(uname -r)/kernel/fs</span><br><span class="line">total 52</span><br><span class="line">-rw-r--r--. 1 root root 21853 Sep 18 21:46 binfmt_misc.ko</span><br><span class="line">drwxr-xr-x. 2 root root    21 Sep 25 17:21 btrfs</span><br><span class="line">drwxr-xr-x. 2 root root    26 Sep 25 17:21 cachefiles</span><br><span class="line">drwxr-xr-x. 2 root root    20 Sep 25 17:21 ceph</span><br><span class="line">drwxr-xr-x. 2 root root    20 Sep 25 17:21 cifs</span><br><span class="line">drwxr-xr-x. 2 root root    22 Sep 25 17:21 cramfs</span><br><span class="line">drwxr-xr-x. 2 root root    19 Sep 25 17:21 dlm</span><br><span class="line">drwxr-xr-x. 2 root root    22 Sep 25 17:21 exofs</span><br><span class="line">drwxr-xr-x. 2 root root    20 Sep 25 17:21 ext4</span><br><span class="line">drwxr-xr-x. 2 root root    48 Sep 25 17:21 fat</span><br><span class="line">drwxr-xr-x. 2 root root    23 Sep 25 17:21 fscache</span><br><span class="line">drwxr-xr-x. 2 root root    34 Sep 25 17:21 fuse</span><br><span class="line">drwxr-xr-x. 2 root root    20 Sep 25 17:21 gfs2</span><br><span class="line">drwxr-xr-x. 2 root root    21 Sep 25 17:21 isofs</span><br><span class="line">drwxr-xr-x. 2 root root    20 Sep 25 17:21 jbd2</span><br><span class="line">drwxr-xr-x. 2 root root    21 Sep 25 17:21 lockd</span><br><span class="line">-rw-r--r--. 1 root root 19597 Sep 18 21:46 mbcache.ko</span><br><span class="line">drwxr-xr-x. 6 root root  4096 Sep 25 17:21 nfs</span><br><span class="line">drwxr-xr-x. 2 root root    38 Sep 25 17:21 nfs_common</span><br><span class="line">drwxr-xr-x. 2 root root    20 Sep 25 17:21 nfsd</span><br><span class="line">drwxr-xr-x. 2 root root  4096 Sep 25 17:21 nls</span><br><span class="line">drwxr-xr-x. 2 root root    23 Sep 25 17:21 overlayfs</span><br><span class="line">drwxr-xr-x. 2 root root    23 Sep 25 17:21 pstore</span><br><span class="line">drwxr-xr-x. 2 root root    24 Sep 25 17:21 squashfs</span><br><span class="line">drwxr-xr-x. 2 root root    19 Sep 25 17:21 udf</span><br><span class="line">drwxr-xr-x. 2 root root    19 Sep 25 17:21 xfs</span><br></pre></td></tr></table></figure></p>
+<p>查看系统已经载入到内存中支持的文件系统<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[ceph@lemon ~]$ cat /proc/filesystems</span><br><span class="line">nodev	sysfs</span><br><span class="line">nodev	rootfs</span><br><span class="line">nodev	bdev</span><br><span class="line">nodev	proc</span><br><span class="line">nodev	cgroup</span><br><span class="line">nodev	cpuset</span><br><span class="line">nodev	tmpfs</span><br><span class="line">nodev	devtmpfs</span><br><span class="line">nodev	debugfs</span><br><span class="line">nodev	securityfs</span><br><span class="line">nodev	sockfs</span><br><span class="line">nodev	pipefs</span><br><span class="line">nodev	anon_inodefs</span><br><span class="line">nodev	configfs</span><br><span class="line">nodev	devpts</span><br><span class="line">nodev	ramfs</span><br><span class="line">nodev	hugetlbfs</span><br><span class="line">nodev	autofs</span><br><span class="line">nodev	pstore</span><br><span class="line">nodev	mqueuenodev	selinuxfs</span><br><span class="line">	    xfs</span><br><span class="line">nodev	rpc_pipefs</span><br><span class="line">nodev	nfsd</span><br></pre></td></tr></table></figure></p>
+<h3 id="查看磁盘与目录容量"><a href="#查看磁盘与目录容量" class="headerlink" title="查看磁盘与目录容量"></a>查看磁盘与目录容量</h3><blockquote>
+<p> df：列出文件系统的整体磁盘使用量<br> du：评估文件系统的磁盘使用量（常用在推估目录所占容量）</p>
+</blockquote>
+<p>df [-ahikHTm] [目录或文件名]<br>选项与参数：<br>-a ：列出所有的文件系统，包括系统特有的 /proc 等文件系统；<br>-k ：以 KBytes 的容量显示各文件系统；<br>-m ：以 MBytes 的容量显示各文件系统；<br>-h ：以人们较易阅读的 GBytes, MBytes, KBytes 等格式自行显示；<br>-H ：以 M=1000K 取代 M=1024K 的进位方式；<br>-T ：连同该 partition 的 filesystem 名称 （例如 xfs） 也列出；<br>-i ：不用磁盘容量，而以 inode 的数量来显示</p>
+<p>du [-ahskm] 文件或目录名称<br>选项与参数：<br>-a ：列出所有的文件与目录容量，因为默认仅统计目录下面的文件量而已。<br>-h ：以人们较易读的容量格式 （G/M） 显示；<br>-s ：列出总量而已，而不列出每个各别的目录占用容量；<br>-S ：不包括子目录下的总计，与 -s 有点差别。<br>-k ：以 KBytes 列出容量显示；<br>-m ：以 MBytes 列出容量显示；</p>
+<p>列出系统上所有磁盘列表</p>
+<p>lsblk [-dfimpt] [device]<br>选项与参数：<br>-d ：仅列出磁盘本身，并不会列出该磁盘的分区数据<br>-f ：同时列出该磁盘内的文件系统名称<br>-i ：使用 ASCII 的线段输出，不要使用复杂的编码 （再某些环境下很有用）<br>-m ：同时输出该设备在 /dev 下面的权限数据 （rwx 的数据）<br>-p ：列出该设备的完整文件名！而不是仅列出最后的名字而已。<br>-t ：列出该磁盘设备的详细数据，包括磁盘伫列机制、预读写的数据量大小等</p>
+<p>查看设备的UUID(universally unique identifier,全域单一识别码)<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">[root@lemon ~]<span class="comment"># blkid  #没行代表一个文件系统</span></span><br><span class="line">/dev/sda1: UUID=<span class="string">"1649b929-1e62-46ef-aafe-dacb17e37ce9"</span> TYPE=<span class="string">"xfs"</span> </span><br><span class="line">/dev/sda2: UUID=<span class="string">"85mF3n-EX76-Vw0A-N4fI-5H91-Eaqq-UFVUD3"</span> TYPE=<span class="string">"LVM2_member"</span> </span><br><span class="line">/dev/mapper/centos-root: UUID=<span class="string">"6afcb5de-f93f-4b20-b31a-4c90de872e65"</span> TYPE=<span class="string">"xfs"</span> </span><br><span class="line">/dev/mapper/centos-swap: UUID=<span class="string">"f6f14cdb-481c-4385-8372-96ee47214f2a"</span> TYPE=<span class="string">"swap"</span> </span><br><span class="line">/dev/mapper/centos-home: UUID=<span class="string">"22549e34-e3a5-4bae-96d3-702cbdcc3487"</span> TYPE=<span class="string">"xfs"</span></span><br></pre></td></tr></table></figure></p>
+<p>parted 列出磁盘的分区表类型与分区信息<br>parted device_name print<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@lemon ~]<span class="comment"># parted /dev/sda print</span></span><br><span class="line">Model: ATA ST3320613AS (scsi)</span><br><span class="line">Disk /dev/sda: 320GB</span><br><span class="line">Sector size (logical/physical): 512B/512B</span><br><span class="line">Partition Table: msdos</span><br><span class="line">Disk Flags: </span><br><span class="line"></span><br><span class="line">Number  Start   End    Size   Type     File system  Flags</span><br><span class="line"> 1      1049kB  525MB  524MB  primary  xfs          boot</span><br><span class="line"> 2      525MB   320GB  320GB  primary               lvm</span><br></pre></td></tr></table></figure></p>
+<h3 id="挂载与卸载"><a href="#挂载与卸载" class="headerlink" title="挂载与卸载"></a>挂载与卸载</h3><p>mount [-t 文件系统] 设备文件名 挂载点<br>选项与参数：<br>-a ：依照配置文件 <a href="../Text/index.html#fstab">/etc/fstab</a> 的数据将所有未挂载的磁盘都挂载上来<br>-l ：单纯的输入 mount 会显示目前挂载的信息。加上 -l 可增列 Label 名称！<br>-t ：可以加上文件系统种类来指定欲挂载的类型。常见的 Linux 支持类型有：xfs, ext3, ext4,<br>reiserfs, vfat, iso9660（光盘格式）, nfs, cifs, smbfs （后三种为网络文件系统类型）<br>-n ：在默认的情况下，系统会将实际挂载的情况实时写入 /etc/mtab 中，以利其他程序的运行。<br>但在某些情况下（例如单人维护模式）为了避免问题会刻意不写入。此时就得要使用 -n 选项。<br>-o ：后面可以接一些挂载时额外加上的参数！比方说帐号、密码、读写权限等：<br>      async, sync: 此文件系统是否使用同步写入 （sync） 或非同步 （async） 的<br>      内存机制，请参考<a href="../Text/index.html#harddisk-filerun">文件系统运行方式</a>。默认为 async。<br>    atime,noatime: 是否修订文件的读取时间（atime）。为了性能，某些时刻可使用 noatime<br>    ro, rw: 挂载文件系统成为只读（ro） 或可读写（rw）<br>    auto, noauto: 允许此 filesystem 被以 mount -a 自动挂载（auto）<br>    dev, nodev: 是否允许此 filesystem 上，可创建设备文件？ dev 为可允许<br>    suid, nosuid: 是否允许此 filesystem 含有 suid/sgid 的文件格式？<br>    exec, noexec: 是否允许此 filesystem 上拥有可执行 binary 文件？<br>    user, nouser: 是否允许此 filesystem 让任何使用者执行 mount ？一般来说，<br>    mount 仅有 root 可以进行，但下达 user 参数，则可让<br>    一般 user 也能够对此 partition 进行 mount 。<br>    defaults: 默认值为：rw, suid, dev, exec, auto, nouser, and async<br>    remount: 重新挂载，这在系统出错，或重新更新参数时，很有用！</p>
+<p> umount [-fn] 设备文件名或挂载点<br>选项与参数：<br>-f ：强制卸载！可用在类似网络文件系统 （NFS） 无法读取到的情况下；<br>-l ：立刻卸载文件系统，比 -f 还强！<br>-n ：不更新 /etc/mtab 情况下卸载。</p>
+<p>挂载vfat中文U盘<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line">[root@lemon ~]<span class="comment"># blkid</span></span><br><span class="line">/dev/sda1: UUID=<span class="string">"1649b929-1e62-46ef-aafe-dacb17e37ce9"</span> TYPE=<span class="string">"xfs"</span> </span><br><span class="line">/dev/mapper/centos-root: UUID=<span class="string">"6afcb5de-f93f-4b20-b31a-4c90de872e65"</span> TYPE=<span class="string">"xfs"</span> </span><br><span class="line">/dev/mapper/centos-swap: UUID=<span class="string">"f6f14cdb-481c-4385-8372-96ee47214f2a"</span> TYPE=<span class="string">"swap"</span> </span><br><span class="line">/dev/mapper/centos-home: UUID=<span class="string">"22549e34-e3a5-4bae-96d3-702cbdcc3487"</span> TYPE=<span class="string">"xfs"</span> </span><br><span class="line">/dev/sda2: PTTYPE=<span class="string">"dos"</span> </span><br><span class="line">/dev/sdb4: LABEL=<span class="string">"CentOS 7 x8"</span> UUID=<span class="string">"B4FE-5315"</span> TYPE=<span class="string">"vfat"</span> </span><br><span class="line">[root@lemon ~]<span class="comment">#  mount -o codepage=950,iocharset=utf8 UUID="B4FE-5315" /data/usb</span></span><br><span class="line">[root@lemon ~]<span class="comment"># cd /data/usb</span></span><br><span class="line">[root@lemon usb]<span class="comment"># ll</span></span><br><span class="line">total 50036</span><br><span class="line">-rwxr-xr-x. 1 root root       14 Dec 10  2015 CentOS_BuildTag</span><br><span class="line">-rwxr-xr-x. 1 root root  1673544 Dec  1 23:17 cpu-z_1.7.8.1.exe</span><br><span class="line">drwxr-xr-x. 3 root root     4096 Dec 10  2015 EFI</span><br><span class="line">-rwxr-xr-x. 1 root root      215 Dec 10  2015 EULA</span><br><span class="line">-rwxr-xr-x. 1 root root    18009 Dec 10  2015 GPL</span><br><span class="line">drwxr-xr-x. 3 root root     4096 Dec 10  2015 images</span><br><span class="line">drwxr-xr-x. 2 root root     4096 Dec 10  2015 isolinux</span><br><span class="line">drwxr-xr-x. 2 root root     4096 Dec 10  2015 LiveOS</span><br><span class="line">-rwxr-xr-x. 1 root root 48194704 Dec  1 03:31 ludashi_baidu_5.15.16.1140.exe</span><br><span class="line">drwxr-xr-x. 2 root root  1298432 Dec 10  2015 Packages</span><br><span class="line">drwxr-xr-x. 2 root root     4096 Dec 10  2015 repodata</span><br><span class="line">-rwxr-xr-x. 1 root root     1690 Dec 10  2015 RPM-GPG-KEY-CentOS-7</span><br><span class="line">-rwxr-xr-x. 1 root root     1690 Dec 10  2015 RPM-GPG-KEY-CentOS-Testing-7</span><br><span class="line">drwxr-xr-x. 2 root root     4096 Oct 20 01:03 System Volume Information</span><br><span class="line">-rwxr-xr-x. 1 root root     2883 Dec 10  2015 TRANS.TBL</span><br><span class="line">[root@lemon usb]<span class="comment"># df </span></span><br><span class="line">Filesystem              1K-blocks    Used Available Use% Mounted on</span><br><span class="line">/dev/mapper/centos-root  52403200 4483080  47920120   9% /</span><br><span class="line">devtmpfs                   908892       0    908892   0% /dev</span><br><span class="line">tmpfs                      924352      84    924268   1% /dev/shm</span><br><span class="line">tmpfs                      924352    9104    915248   1% /run</span><br><span class="line">tmpfs                      924352       0    924352   0% /sys/fs/cgroup</span><br><span class="line">/dev/mapper/centos-home 257336560  110504 257226056   1% /home</span><br><span class="line">/dev/sda1                  508588  216628    291960  43% /boot</span><br><span class="line">tmpfs                      184872      16    184856   1% /run/user/42</span><br><span class="line">tmpfs                      184872       0    184872   0% /run/user/1000</span><br><span class="line">/dev/sdb4                 7897600 7729184    168416  98% /data/usb</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/img/wechart.png" alt="lemon WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/img/ali.png" alt="lemon Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      lemon
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://lemon2013.github.io/2016/11/23/Linux-foundation/" title="Linux 常用操作">https://lemon2013.github.io/2016/11/23/Linux-foundation/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/linux/" rel="tag"># linux</a>
+          
+            <a href="/tags/CentOS7/" rel="tag"># CentOS7</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/11/09/Ceph对象存储-rgw-IPv6环境配置/" rel="next" title="Ceph对象存储(rgw)的IPv6环境配置">
+                <i class="fa fa-chevron-left"></i> Ceph对象存储(rgw)的IPv6环境配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2017/05/27/graph-search/" rel="prev" title="图搜索算法">
+                图搜索算法 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQwMC81OTY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/img/lemon.jpg" alt="lemon">
+          <p class="site-author-name" itemprop="name">lemon</p>
+           
+              <p class="site-description motion-element" itemprop="description">不仅仅是搬运工那么简单</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ceph.org.cn/" title="Ceph中国社区" target="_blank">Ceph中国社区</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ceph.com/" title="Ceph官网" target="_blank">Ceph官网</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#查看Linux-版本"><span class="nav-number">1.</span> <span class="nav-text">查看Linux 版本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#Filesystem-Hierarchy-Standard（FHS）"><span class="nav-number">2.</span> <span class="nav-text">Filesystem Hierarchy Standard（FHS）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看Linux-核心版本、位数"><span class="nav-number">3.</span> <span class="nav-text">查看Linux 核心版本、位数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#更改文件属性"><span class="nav-number">4.</span> <span class="nav-text">更改文件属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#复制操作"><span class="nav-number">5.</span> <span class="nav-text">复制操作</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#文件或文件名的搜索"><span class="nav-number">6.</span> <span class="nav-text">文件或文件名的搜索</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#whereis"><span class="nav-number">6.1.</span> <span class="nav-text">whereis</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#locate"><span class="nav-number">6.2.</span> <span class="nav-text">locate</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#find"><span class="nav-number">6.3.</span> <span class="nav-text">find</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#当前linux支持的文件系统"><span class="nav-number">7.</span> <span class="nav-text">当前linux支持的文件系统</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#查看磁盘与目录容量"><span class="nav-number">8.</span> <span class="nav-text">查看磁盘与目录容量</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#挂载与卸载"><span class="nav-number">9.</span> <span class="nav-text">挂载与卸载</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lemon</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+	  用户量
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+	  访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("NXaprDjb1bTKqT7edHYWKidU-gzGzoHsz", "SyncKG852fIyQ8vPMOC3XaEN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 6160,
+    el: 'wpac-rating',
+    color: 'fc6423'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>
