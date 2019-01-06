@@ -96,12 +96,12 @@
 <meta property="og:site_name" content="柠檬">
 <meta property="og:description" content="引言ceph-rest-api 是一个 WSGI （网页服务器网关接口）应用程序，可作为网页服务独立运行，也可在支持 WSGI 的网页服务器下运行。它通过 HTTP 访问接口提供了 ceph 命令行工具的大多数功能，官网详细介绍。本篇将介绍如何配置IPv6环境的ceph-rest-api。 配置IPv4环境ceph-rest-api默认已经安装在ceph集群中，使用如下命令即可启功：12[root">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://oqo3t056d.bkt.clouddn.com/ceph-rest-api.png">
-<meta property="og:updated_time" content="2017-12-26T08:44:51.049Z">
+<meta property="og:image" content="https://lemon2013.github.io/img/ceph-rest-api.png">
+<meta property="og:updated_time" content="2019-01-06T05:09:58.688Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph-rest-api的IPv6环境配置">
 <meta name="twitter:description" content="引言ceph-rest-api 是一个 WSGI （网页服务器网关接口）应用程序，可作为网页服务独立运行，也可在支持 WSGI 的网页服务器下运行。它通过 HTTP 访问接口提供了 ceph 命令行工具的大多数功能，官网详细介绍。本篇将介绍如何配置IPv6环境的ceph-rest-api。 配置IPv4环境ceph-rest-api默认已经安装在ceph集群中，使用如下命令即可启功：12[root">
-<meta name="twitter:image" content="http://oqo3t056d.bkt.clouddn.com/ceph-rest-api.png">
+<meta name="twitter:image" content="https://lemon2013.github.io/img/ceph-rest-api.png">
 
 
 
@@ -433,7 +433,7 @@
 <a id="more"></a>
 <p>如果要更改IP或者端口号，只需在ceph.conf配置文件[global]下添加public_addr字段，如下：<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[global]</span><br><span class="line">public_addr = 49.123.93.84:5001</span><br></pre></td></tr></table></figure></p>
 <p>启动ceph-rest-api<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment">#  ceph-rest-api -n client.admin</span></span><br><span class="line"> * Running on http://49.123.93.84:5001/</span><br></pre></td></tr></table></figure></p>
-<p>访问 <a href="http://49.123.93.84:5001/" target="_blank" rel="noopener">http://49.123.93.84:5001/</a> 即可查看对应的原生API<br><img src="http://oqo3t056d.bkt.clouddn.com/ceph-rest-api.png" alt="部分API"></p>
+<p>访问 <a href="http://49.123.93.84:5001/" target="_blank" rel="noopener">http://49.123.93.84:5001/</a> 即可查看对应的原生API<br><img src="/img/ceph-rest-api.png" alt="部分API"></p>
 <h2 id="IPv6环境"><a href="#IPv6环境" class="headerlink" title="IPv6环境"></a>IPv6环境</h2><p>之前尝试直接在ceph.conf配置文件中配置对应的IPv6地址与端口号，但是在启动时报错<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment"># ceph-rest-api -n client.admin</span></span><br><span class="line"> * Running on http://[[2001:250:4402:2001:20c:29ff:fe25:8888]]:5001/</span><br><span class="line">Traceback (most recent call last):</span><br><span class="line">  File <span class="string">"/usr/bin/ceph-rest-api"</span>, line 72, <span class="keyword">in</span> &lt;module&gt;</span><br><span class="line">    app.run(host=app.ceph_addr, port=app.ceph_port)</span><br><span class="line">  File <span class="string">"/usr/lib/python2.7/site-packages/flask/app.py"</span>, line 772, <span class="keyword">in</span> run</span><br><span class="line">    run_simple(host, port, self, **options)</span><br><span class="line">  File <span class="string">"/usr/lib/python2.7/site-packages/werkzeug/serving.py"</span>, line 710, <span class="keyword">in</span> run_simple</span><br><span class="line">    inner()</span><br><span class="line">  File <span class="string">"/usr/lib/python2.7/site-packages/werkzeug/serving.py"</span>, line 692, <span class="keyword">in</span> inner</span><br><span class="line">    passthrough_errors, ssl_context).serve_forever()</span><br><span class="line">  File <span class="string">"/usr/lib/python2.7/site-packages/werkzeug/serving.py"</span>, line 486, <span class="keyword">in</span> make_server</span><br><span class="line">    passthrough_errors, ssl_context)</span><br><span class="line">  File <span class="string">"/usr/lib/python2.7/site-packages/werkzeug/serving.py"</span>, line 410, <span class="keyword">in</span> __init__</span><br><span class="line">    HTTPServer.__init__(self, (host, int(port)), handler)</span><br><span class="line">  File <span class="string">"/usr/lib64/python2.7/SocketServer.py"</span>, line 419, <span class="keyword">in</span> __init__</span><br><span class="line">    self.server_bind()</span><br><span class="line">  File <span class="string">"/usr/lib64/python2.7/BaseHTTPServer.py"</span>, line 108, <span class="keyword">in</span> server_bind</span><br><span class="line">    SocketServer.TCPServer.server_bind(self)</span><br><span class="line">  File <span class="string">"/usr/lib64/python2.7/SocketServer.py"</span>, line 430, <span class="keyword">in</span> server_bind</span><br><span class="line">    self.socket.bind(self.server_address)</span><br><span class="line">  File <span class="string">"/usr/lib64/python2.7/socket.py"</span>, line 224, <span class="keyword">in</span> meth</span><br><span class="line">    <span class="built_in">return</span> getattr(self._sock,name)(*args)</span><br><span class="line">socket.gaierror: [Errno -2] Name or service not known</span><br></pre></td></tr></table></figure></p>
 <p>从报错信息可知IPv6地址不合法http://[[2001:250:4402:2001:20c:29ff:fe25:8888]]:5001/ ，正确地址应该是http://[2001:250:4402:2001:20c:29ff:fe25:8888]:5001/ ，找到对应的/usr/bin/ceph-rest-api文件，打印对应的host为[2001:250:4402:2001:20c:29ff:fe25:8888]，目前找到的解决办法是直接将IPv6地址与端口号写入此文件<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">...</span><br><span class="line"><span class="keyword">if</span> <span class="string">'pdb.py'</span> <span class="keyword">in</span> files:</span><br><span class="line">    app.run(host=app.ceph_addr, port=app.ceph_port,</span><br><span class="line">            debug=True, use_reloader=False, use_debugger=False)</span><br><span class="line"><span class="keyword">else</span>:</span><br><span class="line">    app.ceph_addr=<span class="string">'2001:250:4402:2001:20c:29ff:fe25:8888'</span>;</span><br><span class="line">    app.ceph_port=5001;</span><br><span class="line">    app.run(host=app.ceph_addr, port=app.ceph_port)</span><br></pre></td></tr></table></figure></p>
 <p>并运行ceph-rest-api<br><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@ceph001 cluster]<span class="comment">#  ceph-rest-api -n client.admin</span></span><br><span class="line"> * Running on http://[2001:250:4402:2001:20c:29ff:fe25:8888]:5001/</span><br></pre></td></tr></table></figure></p>
@@ -545,8 +545,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/20/Introduction/" rel="prev" title="关于博客那点事">
-                关于博客那点事 <i class="fa fa-chevron-right"></i>
+              <a href="/2019/01/06/qiniu2local/" rel="prev" title="如何在七牛云测试域名失效情况下下载文件[windows]">
+                如何在七牛云测试域名失效情况下下载文件[windows] <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -642,7 +642,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -664,7 +664,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>

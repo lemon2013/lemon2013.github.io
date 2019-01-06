@@ -2,13 +2,26 @@
 <search>
   <entry>
     <title><![CDATA[关于博客那点事]]></title>
-    <url>%2F2018%2F07%2F20%2FIntroduction%2F</url>
+    <url>%2F2019%2F12%2F20%2FIntroduction%2F</url>
     <content type="text"><![CDATA[我从来没有感觉到与一个人如此心灵相通同时又如此无助直到那天我Baidu无果，想尽办法Google到一个问题那个人遇到过一个跟我一样的问题没有回帖发帖时间：1970年1月1日 请问此刻的你有什么获奖感言？是否很想问这位大侠后来呢？也许你会留下你的评论，“大侠我也遇到过同样的问题，请问后面是怎么解决的？大侠…大侠..你还在吗？”当然这只是一个笑话，关于博客，其实我一直有这样一个想法，想把自己的所遇所知分享给大家，也许在未来的某一天能有幸与你相遇。]]></content>
       <categories>
         <category>日记</category>
       </categories>
       <tags>
         <tag>随记</tag>
+      </tags>
+  </entry>
+  <entry>
+    <title><![CDATA[如何在七牛云测试域名失效情况下下载文件[windows]]]></title>
+    <url>%2F2019%2F01%2F06%2Fqiniu2local%2F</url>
+    <content type="text"><![CDATA[引言这事就说来话长了，得从一个多月前的邮件说起，之前也没太注意，心想收回就收回，不然每个月还得交几块钱的访问流量费，实在是太贵了。今天有时间看看博客发现图片打不开就算了，竟然七牛云还不给我图片下载的权限了，说要绑定备案域名，这不是为难我这种穷苦百姓吗，说到底还是因为我穷，所以找了个免费的下载文件方法以供像我一样穷的百姓参考。 命令行辅助工具(qrsctl)qrsctl 是根据七牛云存储API实现的一个简易命令行辅助工具。覆盖七牛云存储开发者网站包含的大部分甚至更高级的功能。开发者在对七牛云存储 API 有基本了解的情况下，此工具将会非常适用。qrsctl 命令行辅助工具下载地址： Mac OS Linux 64bits Linux 32bits Linux ARMv6 Windows 32bits 命令行操作本想着直接丢个官网的链接进来，可是让你们再跳转过去多麻烦啊，万一你们跟我一样懒咋办，所以我还是使用我的独门特技(大家都懂的)给大家讲解下。 根据系统下载对应版本，这里以windows做参考，解压下载文件之后需要修改文件后缀名为.exe。 利用cmd命令行工具进入qrsctl存放目录并运行。1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727374757677787980E:\blog&gt;qrsctl-v3.2.exeUsage: qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v login &lt;User&gt; &lt;Passwd&gt; - Login qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v info - Show user information qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v appinfo [&lt;AppName&gt;] - Get application info qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v put -c &lt;Bucket&gt; &lt;Key&gt; &lt;SrcFile&gt; - Put file qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v get &lt;Bucket&gt; &lt;Key&gt; &lt;DestFile&gt; - Get file qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v stat &lt;Bucket&gt; &lt;Key&gt; - Stat file qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cat &lt;Bucket&gt; &lt;Key&gt; - Cat file qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v del &lt;Bucket&gt; &lt;Key&gt; - Delete a file qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v mv &lt;Bucket1:Key1&gt; &lt;Bucket2:Key2&gt; - Move file from Bucket1:Key1 to Bucket2:Key2 qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cp &lt;Bucket1:Key1&gt; &lt;Bucket2:Key2&gt; - Copy file qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v chgm &lt;Bucket&gt; &lt;key&gt; &lt;mimeType&gt; - Change MimeType qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v listprefix &lt;bucket&gt; &lt;prefix&gt; [&lt;limit&gt;] [&lt;marker&gt;] - List files qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v mkbucket &lt;BucketName&gt; &lt;Zone&gt; - Create a bucket, &lt;Zone&gt;:z0, z1, z2, na0 qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v buckets &lt;Shared&gt; - List all buckets qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v share &lt;Bucket&gt; &lt;Uid&gt; &lt;Permission&gt; PermissionOptions: 1(RD) 2(RW) -1(Cancel Share) - Share bucket qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v listprefix &lt;bucket&gt; &lt;prefix&gt; [&lt;limit&gt;] [&lt;marker&gt;] - List files buckets qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v bucketinfo &lt;Bucket&gt; - Get bucket info qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v img &lt;Bucket&gt; &lt;SrcUrl&gt; [&lt;SrcHost&gt;] [&lt;Expires&gt;] - Image bucket with source qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v unimg &lt;Bucket&gt; - Unimage bucket qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v protected &lt;Bucket&gt; &lt;Protected&gt; - Set bucket protected or not qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v separator &lt;Bucket&gt; &lt;Sep&gt; - Set style separator qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v style &lt;Bucket&gt; &lt;Name&gt; &lt;Style&gt; - Set style qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v unstyle &lt;Bucket&gt; &lt;Name&gt; - Unset style qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v styleCopy &lt;bucket_Src&gt; &lt;bucket_Dest&gt; - Copy styles qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v private &lt;Bucket&gt; &lt;Private&gt; - Set bucket private or not qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v imgsft &lt;Bucket&gt; &lt;imgsft&gt; - Set bucket image storage with fault tolerant qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v noIndexPage &lt;Bucket&gt; &lt;0/1&gt; - Turn On/Off bucket index page qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v redirect &lt;Bucekt&gt; &lt;Key&gt; &lt;RedirectUrl&gt; [&lt;RedirectCode&gt;] - Redirect a key to an url qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v pfop &lt;bucket&gt; &lt;key&gt; &lt;fops&gt; [&lt;notifyURL&gt;] [&lt;force&gt;] [&lt;pipeline&gt;] - Do pfop qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v listjobs &lt;pipelineId&gt; [&lt;marker&gt;] [&lt;limit&gt;] - List jobs of pfop qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cdn/refresh &lt;Url1&gt; &lt;Url2&gt;...&lt;UrlN&gt; - Refresh cdn cache for urls qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cdn/bandwidth &lt;domains&gt; &lt;start_date&gt; &lt;end_date&gt; [&lt;granularity&gt;] - Get bandwidth of domains qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cdn/flux &lt;domains&gt; &lt;start_date&gt; &lt;end_date&gt; [&lt;granularity&gt;] - Get traffic of domainsAuthorization: 1) qrsctl login &lt;User&gt; &lt;Passwd&gt;: and then remember the login token 2) qrsctl login &lt;AccessKey&gt; &lt;SecretKey&gt; 3) qrsctl -a &lt;AccountConf&gt;: provide an account config file that provide access_key &amp; secret_key (in json format)BuildVersion: qrsctl v3.2.20170501 登陆七牛云，登录成功后，会话的有效期是 3600 秒（一个小时），一个小时后需要重新登录1qrsctl-v3.2 login &lt;User&gt; &lt;Passwd&gt; User，用户名，一般为注册邮箱 Passwd，登录密码 下载文件12345qrsctl-v3.2 get &lt;Bucket&gt; &lt;Key&gt; #例如E:\blog&gt;qrsctl-v3.2 get lemon 1.pdf INFO: Fetching http://iovip-z2.qbox.me/file/52vJUfCjk6avRokAwhdD5E2rAiwUNAC2Aw8AACe2rlxsrw9dbN-uXGwsnit58zB3FSvpDj7frlxs365cbN-uXGywIEnJC7K2tgUU14ESvXSia2YXCrS2trbGF7e2tra2tvB0h1m3tra2vFr6S-4RVEpRlwQiLCxA7VsHVEPXxsba39XXwt_Z2JnG0tBtGOraaRjq2mkY6tppGOra ... Bucket，桶名 Key，文件名 不足目前没有找到支持批量下载的方法，虽然七牛云测试域名失效导致图片外链失效的解决办法这篇博客提到使用listprefix命令，但是我执行没有获取到对应桶的文件列表。 总结折腾一番总算是把我博客中的全部图片下载下来并替换新链接了，所谓上有政策下有对策，遇事无须紧张，毕竟大佬很多可以帮助我们去解决问题。 参考文件 命令行辅助工具(qrsctl) 七牛云测试域名失效导致图片外链失效的解决办法]]></content>
+      <categories>
+        <category>日记</category>
+      </categories>
+      <tags>
+        <tag>七牛云数据转移</tag>
+        <tag>测试域名失效</tag>
+        <tag>域名回收</tag>
       </tags>
   </entry>
   <entry>
@@ -65,9 +78,9 @@
         <category>动态规划</category>
       </categories>
       <tags>
+        <tag>矩阵链乘法</tag>
         <tag>算法</tag>
         <tag>算法导论</tag>
-        <tag>矩阵链乘法</tag>
       </tags>
   </entry>
   <entry>
@@ -90,9 +103,9 @@
         <category>动态规划</category>
       </categories>
       <tags>
-        <tag>钢条切割</tag>
         <tag>算法</tag>
         <tag>算法导论</tag>
+        <tag>钢条切割</tag>
       </tags>
   </entry>
   <entry>

@@ -1,0 +1,1437 @@
+<!doctype html>
+
+
+
+  
+
+
+<html class="theme-next mist use-motion" lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.8.0">
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="七牛云数据转移,测试域名失效,域名回收,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="柠檬" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.1">
+
+
+
+
+
+
+<meta name="description" content="引言这事就说来话长了，得从一个多月前的邮件说起，之前也没太注意，心想收回就收回，不然每个月还得交几块钱的访问流量费，实在是太贵了。">
+<meta name="keywords" content="七牛云数据转移,测试域名失效,域名回收">
+<meta property="og:type" content="article">
+<meta property="og:title" content="如何在七牛云测试域名失效情况下下载文件[windows]">
+<meta property="og:url" content="https://lemon2013.github.io/2019/01/06/qiniu2local/index.html">
+<meta property="og:site_name" content="柠檬">
+<meta property="og:description" content="引言这事就说来话长了，得从一个多月前的邮件说起，之前也没太注意，心想收回就收回，不然每个月还得交几块钱的访问流量费，实在是太贵了。">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:image" content="https://lemon2013.github.io/img/qiniuyun.png">
+<meta property="og:updated_time" content="2019-01-06T06:30:15.918Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="如何在七牛云测试域名失效情况下下载文件[windows]">
+<meta name="twitter:description" content="引言这事就说来话长了，得从一个多月前的邮件说起，之前也没太注意，心想收回就收回，不然每个月还得交几块钱的访问流量费，实在是太贵了。">
+<meta name="twitter:image" content="https://lemon2013.github.io/img/qiniuyun.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Mist',
+    sidebar: {"position":"left","display":"post","offset":12,"offset_float":0,"b2t":false,"scrollpercent":false},
+    fancybox: true,
+    motion: true,
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":8},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="https://lemon2013.github.io/2019/01/06/qiniu2local/">
+
+
+
+
+
+  <title>如何在七牛云测试域名失效情况下下载文件[windows] | 柠檬</title>
+  
+
+
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "https://hm.baidu.com/hm.js?f806e9929dba2fe30cbf8c1f6143d9cc";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope="" itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail ">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope="" itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/" class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">柠檬</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">Just do it!</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-guestbook">
+          <a href="/guestbook" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-paper-plane"></i> <br>
+            
+            留言
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="popup-trigger">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <div class="popup search-popup local-search-popup">
+  <div class="local-search-header clearfix">
+    <span class="search-icon">
+      <i class="fa fa-search"></i>
+    </span>
+    <span class="popup-btn-close">
+      <i class="fa fa-times-circle"></i>
+    </span>
+    <div class="local-search-input-wrapper">
+      <input autocomplete="off" placeholder="搜索..." spellcheck="false" type="text" id="local-search-input">
+    </div>
+  </div>
+  <div id="local-search-result"></div>
+</div>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal " itemscope="" itemtype="http://schema.org/Article">
+    <link itemprop="mainEntityOfPage" href="https://lemon2013.github.io/2019/01/06/qiniu2local/">
+
+    <span hidden itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="lemon">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/img/lemon.jpg">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope="" itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="柠檬">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">如何在七牛云测试域名失效情况下下载文件[windows]</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-01-06T12:55:30+08:00">
+                2019-01-06
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category">
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope="" itemtype="http://schema.org/Thing">
+                  <a href="/categories/日记/" itemprop="url" rel="index">
+                    <span itemprop="name">日记</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+             <span id="/2019/01/06/qiniu2local/" class="leancloud_visitors" data-flag-title="如何在七牛云测试域名失效情况下下载文件[windows]">
+               <span class="post-meta-divider">|</span>
+               <span class="post-meta-item-icon">
+                 <i class="fa fa-eye"></i>
+               </span>
+               
+                 <span class="post-meta-item-text">阅读次数 </span>
+               
+                 <span class="leancloud-visitors-count"></span>
+             </span>
+          
+
+          
+            <span class="post-meta-divider">|</span>
+            <span class="page-pv"><i class="fa fa-file-o"></i>
+            <span class="busuanzi-value" id="busuanzi_value_page_pv"></span>
+            </span>
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h1 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h1><p><img src="/img/qiniuyun.png" alt="七牛回收"><br>这事就说来话长了，得从一个多月前的邮件说起，之前也没太注意，心想收回就收回，不然每个月还得交几块钱的访问流量费，实在是太贵了。<a id="more"></a>今天有时间看看博客发现图片打不开就算了，竟然七牛云还不给我图片下载的权限了，说要绑定备案域名，这不是为难我这种穷苦百姓吗，说到底还是因为我穷，所以找了个免费的下载文件方法以供像我一样穷的百姓参考。</p>
+<h1 id="命令行辅助工具-qrsctl"><a href="#命令行辅助工具-qrsctl" class="headerlink" title="命令行辅助工具(qrsctl)"></a>命令行辅助工具(qrsctl)</h1><p>qrsctl 是根据七牛云存储API实现的一个简易命令行辅助工具。覆盖七牛云存储开发者网站包含的大部分甚至更高级的功能。开发者在对七牛云存储 API 有基本了解的情况下，此工具将会非常适用。<br>qrsctl 命令行辅助工具下载地址：</p>
+<ul>
+<li><a href="http://devtools.qiniu.com/darwin/amd64/qrsctl" target="_blank" rel="noopener">Mac OS</a></li>
+<li><a href="http://devtools.qiniu.com/linux/amd64/qrsctl" target="_blank" rel="noopener">Linux 64bits</a></li>
+<li><a href="http://devtools.qiniu.com/linux/386/qrsctl" target="_blank" rel="noopener">Linux 32bits</a></li>
+<li><a href="http://devtools.qiniu.com/linux/arm/qrsctl" target="_blank" rel="noopener">Linux ARMv6</a></li>
+<li><a href="http://devtools.qiniu.com/windows/386/qrsctl.exe?ref=developer.qiniu.com" target="_blank" rel="noopener">Windows 32bits</a></li>
+</ul>
+<h1 id="命令行操作"><a href="#命令行操作" class="headerlink" title="命令行操作"></a>命令行操作</h1><p>本想着直接丢个<a href="https://developer.qiniu.com/kodo/tools/1300/qrsctl" target="_blank" rel="noopener">官网的链接</a>进来，可是让你们再跳转过去多麻烦啊，万一你们跟我一样懒咋办，所以我还是使用我的独门特技(大家都懂的)给大家讲解下。</p>
+<ol>
+<li>根据系统下载对应版本，这里以windows做参考，解压下载文件之后需要修改文件后缀名为.exe。</li>
+<li>利用cmd命令行工具进入qrsctl存放目录并运行。<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br></pre></td><td class="code"><pre><span class="line">E:\blog&gt;qrsctl-v3.2.exe</span><br><span class="line"></span><br><span class="line">Usage:</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v login &lt;User&gt; &lt;Passwd&gt;</span><br><span class="line">        - Login</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v info</span><br><span class="line">        - Show user information</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v appinfo [&lt;AppName&gt;]</span><br><span class="line">        - Get application info</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v put -c &lt;Bucket&gt; &lt;Key&gt; &lt;SrcFile&gt;</span><br><span class="line">        - Put file</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v get &lt;Bucket&gt; &lt;Key&gt; &lt;DestFile&gt;</span><br><span class="line">        - Get file</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v <span class="built_in">stat</span> &lt;Bucket&gt; &lt;Key&gt;</span><br><span class="line">        - Stat file</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cat &lt;Bucket&gt; &lt;Key&gt;</span><br><span class="line">        - Cat file</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v del &lt;Bucket&gt; &lt;Key&gt;</span><br><span class="line">        - Delete a file</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v mv &lt;Bucket1:Key1&gt; &lt;Bucket2:Key2&gt;</span><br><span class="line">        - Move file from Bucket1:Key1 to Bucket2:Key2</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cp &lt;Bucket1:Key1&gt; &lt;Bucket2:Key2&gt;</span><br><span class="line">        - Copy file</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v chgm &lt;Bucket&gt; &lt;key&gt; &lt;mimeType&gt;</span><br><span class="line">        - Change MimeType</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v listprefix &lt;bucket&gt; &lt;prefix&gt; [&lt;<span class="built_in">limit</span>&gt;] [&lt;marker&gt;]</span><br><span class="line">        - List files</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v mkbucket &lt;BucketName&gt; &lt;Zone&gt;</span><br><span class="line">        - Create a bucket, &lt;Zone&gt;:z0, z1, z2, na0</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v buckets &lt;Shared&gt;</span><br><span class="line">        - List all buckets</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v share &lt;Bucket&gt; &lt;Uid&gt; &lt;Permission&gt;</span><br><span class="line">                                        PermissionOptions: 1(RD) 2(RW) -1(Cancel Share)</span><br><span class="line">        - Share bucket</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v listprefix &lt;bucket&gt; &lt;prefix&gt; [&lt;<span class="built_in">limit</span>&gt;] [&lt;marker&gt;]</span><br><span class="line">        - List files buckets</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v bucketinfo &lt;Bucket&gt;</span><br><span class="line">        - Get bucket info</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v img &lt;Bucket&gt; &lt;SrcUrl&gt; [&lt;SrcHost&gt;] [&lt;Expires&gt;]</span><br><span class="line">        - Image bucket with <span class="built_in">source</span></span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v unimg &lt;Bucket&gt;</span><br><span class="line">        - Unimage bucket</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v protected &lt;Bucket&gt; &lt;Protected&gt;</span><br><span class="line">        - Set bucket protected or not</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v separator &lt;Bucket&gt; &lt;Sep&gt;</span><br><span class="line">        - Set style separator</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v style &lt;Bucket&gt; &lt;Name&gt; &lt;Style&gt;</span><br><span class="line">        - Set style</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v unstyle &lt;Bucket&gt; &lt;Name&gt;</span><br><span class="line">        - Unset style</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v styleCopy &lt;bucket_Src&gt; &lt;bucket_Dest&gt;</span><br><span class="line">        - Copy styles</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v private &lt;Bucket&gt; &lt;Private&gt;</span><br><span class="line">        - Set bucket private or not</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v imgsft  &lt;Bucket&gt; &lt;imgsft&gt;</span><br><span class="line">        - Set bucket image storage with fault tolerant</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v noIndexPage &lt;Bucket&gt; &lt;0/1&gt;</span><br><span class="line">        - Turn On/Off bucket index page</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v redirect &lt;Bucekt&gt; &lt;Key&gt; &lt;RedirectUrl&gt; [&lt;RedirectCode&gt;]</span><br><span class="line">        - Redirect a key to an url</span><br><span class="line"></span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v pfop &lt;bucket&gt; &lt;key&gt; &lt;fops&gt; [&lt;notifyURL&gt;] [&lt;force&gt;] [&lt;pipelin</span><br><span class="line">e&gt;]     - Do pfop</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v listjobs &lt;pipelineId&gt; [&lt;marker&gt;] [&lt;<span class="built_in">limit</span>&gt;]</span><br><span class="line">        - List <span class="built_in">jobs</span> of pfop</span><br><span class="line"></span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cdn/refresh &lt;Url1&gt; &lt;Url2&gt;...&lt;UrlN&gt;</span><br><span class="line">        - Refresh cdn cache <span class="keyword">for</span> urls</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cdn/bandwidth &lt;domains&gt; &lt;start_date&gt; &lt;end_date&gt; [&lt;granularit</span><br><span class="line">y&gt;]     - Get bandwidth of domains</span><br><span class="line">  qrsctl [-l|d|lan|it|-f &lt;hostFile&gt;] -v cdn/flux &lt;domains&gt; &lt;start_date&gt; &lt;end_date&gt; [&lt;granularity&gt;]</span><br><span class="line">        - Get traffic of domains</span><br><span class="line"></span><br><span class="line">Authorization:</span><br><span class="line">  1) qrsctl login &lt;User&gt; &lt;Passwd&gt;: and <span class="keyword">then</span> remember the login token</span><br><span class="line">  2) qrsctl login &lt;AccessKey&gt; &lt;SecretKey&gt;</span><br><span class="line">  3) qrsctl -a &lt;AccountConf&gt;: provide an account config file that provide access_key &amp; secret_key (i</span><br><span class="line">n json format)</span><br><span class="line">BuildVersion:</span><br><span class="line">  qrsctl v3.2.20170501</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ol start="3">
+<li>登陆七牛云，登录成功后，会话的有效期是 3600 秒（一个小时），一个小时后需要重新登录<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">qrsctl-v3.2 login &lt;User&gt; &lt;Passwd&gt;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>User，用户名，一般为注册邮箱</li>
+<li>Passwd，登录密码</li>
+</ul>
+<ol start="4">
+<li>下载文件<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">qrsctl-v3.2 get &lt;Bucket&gt; &lt;Key&gt; </span><br><span class="line"></span><br><span class="line"><span class="comment">#例如</span></span><br><span class="line">E:\blog&gt;qrsctl-v3.2 get lemon 1.pdf </span><br><span class="line">INFO: Fetching http://iovip-z2.qbox.me/file/52vJUfCjk6avRokAwhdD5E2rAiwUNAC2Aw8AACe2rlxsrw9dbN-uXGwsnit58zB3FSvpDj7frlxs365cbN-uXGywIEnJC7K2tgUU14ESvXSia2YXCrS2trbGF7e2tra2tvB0h1m3tra2vFr6S-4RVEpRlwQiLCxA7VsHVEPXxsba39XXwt_Z2JnG0tBtGOraaRjq2mkY6tppGOra ...</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<ul>
+<li>Bucket，桶名</li>
+<li>Key，文件名</li>
+</ul>
+<h1 id="不足"><a href="#不足" class="headerlink" title="不足"></a>不足</h1><p>目前没有找到支持批量下载的方法，虽然<a href="https://blog.csdn.net/lkj345/article/details/83382636" target="_blank" rel="noopener">七牛云测试域名失效导致图片外链失效的解决办法</a>这篇博客提到使用listprefix命令，但是我执行没有获取到对应桶的文件列表。</p>
+<h1 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h1><p>折腾一番总算是把我博客中的全部图片下载下来并替换新链接了，所谓上有政策下有对策，遇事无须紧张，毕竟大佬很多可以帮助我们去解决问题。</p>
+<h1 id="参考文件"><a href="#参考文件" class="headerlink" title="参考文件"></a>参考文件</h1><ul>
+<li><a href="https://developer.qiniu.com/kodo/tools/1300/qrsctl" target="_blank" rel="noopener">命令行辅助工具(qrsctl)</a></li>
+<li><a href="https://blog.csdn.net/lkj345/article/details/83382636" target="_blank" rel="noopener">七牛云测试域名失效导致图片外链失效的解决办法</a></li>
+</ul>
+
+      
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+    <div>
+      
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 90%; text-align: center;">
+    <div>坚持原创技术分享，您的支持将鼓励我继续创作！</div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赏</span>
+    </button>
+    <div id="QR" style="display: none;">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/img/wechart.png" alt="lemon WeChat Pay">
+          <p>微信打赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/img/ali.png" alt="lemon Alipay">
+          <p>支付宝打赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+    <div>
+      
+        
+  <ul class="post-copyright">
+    <li class="post-copyright-author">
+      <strong>本文作者：</strong>
+      lemon
+    </li>
+    <li class="post-copyright-link">
+      <strong>本文链接：</strong>
+      <a href="https://lemon2013.github.io/2019/01/06/qiniu2local/" title="如何在七牛云测试域名失效情况下下载文件[windows]">https://lemon2013.github.io/2019/01/06/qiniu2local/</a>
+    </li>
+    <li class="post-copyright-license">
+      <strong>版权声明： </strong>
+      本博客所有文章除特别声明外，均采用 <a href="https://creativecommons.org/licenses/by-nc-sa/3.0/" rel="external nofollow" target="_blank">CC BY-NC-SA 3.0</a> 许可协议。转载请注明出处！
+    </li>
+  </ul>
+
+
+      
+    </div>
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/七牛云数据转移/" rel="tag"># 七牛云数据转移</a>
+          
+            <a href="/tags/测试域名失效/" rel="tag"># 测试域名失效</a>
+          
+            <a href="/tags/域名回收/" rel="tag"># 域名回收</a>
+          
+        </div>
+      
+
+      
+      
+        <div class="post-widgets">
+        
+          <div class="wp_rating">
+            <div id="wpac-rating"></div>
+          </div>
+        
+
+        
+        </div>
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2017/12/26/ceph-rest-api/" rel="next" title="ceph-rest-api的IPv6环境配置">
+                <i class="fa fa-chevron-left"></i> ceph-rest-api的IPv6环境配置
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/12/20/Introduction/" rel="prev" title="关于博客那点事">
+                关于博客那点事 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <!-- JiaThis Button BEGIN -->
+<div class="jiathis_style">
+  <a class="jiathis_button_tsina"></a>
+  <a class="jiathis_button_tqq"></a>
+  <a class="jiathis_button_weixin"></a>
+  <a class="jiathis_button_cqq"></a>
+  <a class="jiathis_button_douban"></a>
+  <a class="jiathis_button_renren"></a>
+  <a class="jiathis_button_qzone"></a>
+  <a class="jiathis_button_kaixin001"></a>
+  <a class="jiathis_button_copy"></a>
+  <a href="http://www.jiathis.com/share" class="jiathis jiathis_txt jiathis_separator jtico jtico_jiathis" target="_blank"></a>
+  <a class="jiathis_counter_style"></a>
+</div>
+<script type="text/javascript">
+  var jiathis_config={
+    hideMore:false
+  }
+</script>
+<script type="text/javascript" src="http://v3.jiathis.com/code/jia.js" charset="utf-8"></script>
+<!-- JiaThis Button END -->
+
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div id="lv-container" data-id="city" data-uid="MTAyMC8yOTQwMC81OTY4"></div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope="" itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/img/lemon.jpg" alt="lemon">
+          <p class="site-author-name" itemprop="name">lemon</p>
+           
+              <p class="site-description motion-element" itemprop="description">不仅仅是搬运工那么简单</p>
+          
+        </div>
+        <nav class="site-state motion-element">
+
+          
+            <div class="site-state-item site-state-posts">
+              <a href="/archives">
+                <span class="site-state-item-count">13</span>
+                <span class="site-state-item-name">日志</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-categories">
+              <a href="/categories/index.html">
+                <span class="site-state-item-count">6</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            
+            
+            <div class="site-state-item site-state-tags">
+              <a href="/tags/index.html">
+                <span class="site-state-item-count">31</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+        </div>
+
+        
+        
+
+        
+        
+          <div class="links-of-blogroll motion-element links-of-blogroll-inline">
+            <div class="links-of-blogroll-title">
+              <i class="fa  fa-fw fa-globe"></i>
+              
+            </div>
+            <ul class="links-of-blogroll-list">
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ceph.org.cn/" title="Ceph中国社区" target="_blank">Ceph中国社区</a>
+                </li>
+              
+                <li class="links-of-blogroll-item">
+                  <a href="http://ceph.com/" title="Ceph官网" target="_blank">Ceph官网</a>
+                </li>
+              
+            </ul>
+          </div>
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#引言"><span class="nav-number">1.</span> <span class="nav-text">引言</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令行辅助工具-qrsctl"><span class="nav-number">2.</span> <span class="nav-text">命令行辅助工具(qrsctl)</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#命令行操作"><span class="nav-number">3.</span> <span class="nav-text">命令行操作</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#不足"><span class="nav-number">4.</span> <span class="nav-text">不足</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#总结"><span class="nav-number">5.</span> <span class="nav-text">总结</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#参考文件"><span class="nav-number">6.</span> <span class="nav-text">参考文件</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2016 - 
+  <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">lemon</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Mist
+  </a>
+</div>
+
+
+        
+<div class="busuanzi-count">
+  <script async src="https://dn-lbstatics.qbox.me/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+  
+    <span class="site-uv">
+      <i class="fa fa-user"></i>
+	  用户量
+      <span class="busuanzi-value" id="busuanzi_value_site_uv"></span>
+      
+    </span>
+  
+
+  
+    <span class="site-pv">
+      <i class="fa fa-eye"></i>
+	  访问量
+      <span class="busuanzi-value" id="busuanzi_value_site_pv"></span>
+      
+    </span>
+  
+</div>
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.1"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.1"></script>
+
+
+
+  
+  
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.1"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.1"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+    <script type="text/javascript">
+      (function(d, s) {
+        var j, e = d.getElementsByTagName(s)[0];
+        if (typeof LivereTower === 'function') { return; }
+        j = d.createElement(s);
+        j.src = 'https://cdn-city.livere.com/js/embed.dist.js';
+        j.async = true;
+        e.parentNode.insertBefore(j, e);
+      })(document, 'script');
+    </script>
+  
+
+
+
+
+
+
+  
+
+  <script type="text/javascript">
+    // Popup Window;
+    var isfetched = false;
+    var isXml = true;
+    // Search DB path;
+    var search_path = "search.xml";
+    if (search_path.length === 0) {
+      search_path = "search.xml";
+    } else if (/json$/i.test(search_path)) {
+      isXml = false;
+    }
+    var path = "/" + search_path;
+    // monitor main search box;
+
+    var onPopupClose = function (e) {
+      $('.popup').hide();
+      $('#local-search-input').val('');
+      $('.search-result-list').remove();
+      $('#no-result').remove();
+      $(".local-search-pop-overlay").remove();
+      $('body').css('overflow', '');
+    }
+
+    function proceedsearch() {
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay"></div>')
+        .css('overflow', 'hidden');
+      $('.search-popup-overlay').click(onPopupClose);
+      $('.popup').toggle();
+      var $localSearchInput = $('#local-search-input');
+      $localSearchInput.attr("autocapitalize", "none");
+      $localSearchInput.attr("autocorrect", "off");
+      $localSearchInput.focus();
+    }
+
+    // search function;
+    var searchFunc = function(path, search_id, content_id) {
+      'use strict';
+
+      // start loading animation
+      $("body")
+        .append('<div class="search-popup-overlay local-search-pop-overlay">' +
+          '<div id="search-loading-icon">' +
+          '<i class="fa fa-spinner fa-pulse fa-5x fa-fw"></i>' +
+          '</div>' +
+          '</div>')
+        .css('overflow', 'hidden');
+      $("#search-loading-icon").css('margin', '20% auto 0 auto').css('text-align', 'center');
+
+      $.ajax({
+        url: path,
+        dataType: isXml ? "xml" : "json",
+        async: true,
+        success: function(res) {
+          // get the contents from search data
+          isfetched = true;
+          $('.popup').detach().appendTo('.header-inner');
+          var datas = isXml ? $("entry", res).map(function() {
+            return {
+              title: $("title", this).text(),
+              content: $("content",this).text(),
+              url: $("url" , this).text()
+            };
+          }).get() : res;
+          var input = document.getElementById(search_id);
+          var resultContent = document.getElementById(content_id);
+          var inputEventFunction = function() {
+            var searchText = input.value.trim().toLowerCase();
+            var keywords = searchText.split(/[\s\-]+/);
+            if (keywords.length > 1) {
+              keywords.push(searchText);
+            }
+            var resultItems = [];
+            if (searchText.length > 0) {
+              // perform local searching
+              datas.forEach(function(data) {
+                var isMatch = false;
+                var hitCount = 0;
+                var searchTextCount = 0;
+                var title = data.title.trim();
+                var titleInLowerCase = title.toLowerCase();
+                var content = data.content.trim().replace(/<[^>]+>/g,"");
+                var contentInLowerCase = content.toLowerCase();
+                var articleUrl = decodeURIComponent(data.url);
+                var indexOfTitle = [];
+                var indexOfContent = [];
+                // only match articles with not empty titles
+                if(title != '') {
+                  keywords.forEach(function(keyword) {
+                    function getIndexByWord(word, text, caseSensitive) {
+                      var wordLen = word.length;
+                      if (wordLen === 0) {
+                        return [];
+                      }
+                      var startPosition = 0, position = [], index = [];
+                      if (!caseSensitive) {
+                        text = text.toLowerCase();
+                        word = word.toLowerCase();
+                      }
+                      while ((position = text.indexOf(word, startPosition)) > -1) {
+                        index.push({position: position, word: word});
+                        startPosition = position + wordLen;
+                      }
+                      return index;
+                    }
+
+                    indexOfTitle = indexOfTitle.concat(getIndexByWord(keyword, titleInLowerCase, false));
+                    indexOfContent = indexOfContent.concat(getIndexByWord(keyword, contentInLowerCase, false));
+                  });
+                  if (indexOfTitle.length > 0 || indexOfContent.length > 0) {
+                    isMatch = true;
+                    hitCount = indexOfTitle.length + indexOfContent.length;
+                  }
+                }
+
+                // show search results
+
+                if (isMatch) {
+                  // sort index by position of keyword
+
+                  [indexOfTitle, indexOfContent].forEach(function (index) {
+                    index.sort(function (itemLeft, itemRight) {
+                      if (itemRight.position !== itemLeft.position) {
+                        return itemRight.position - itemLeft.position;
+                      } else {
+                        return itemLeft.word.length - itemRight.word.length;
+                      }
+                    });
+                  });
+
+                  // merge hits into slices
+
+                  function mergeIntoSlice(text, start, end, index) {
+                    var item = index[index.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    var hits = [];
+                    var searchTextCountInSlice = 0;
+                    while (position + word.length <= end && index.length != 0) {
+                      if (word === searchText) {
+                        searchTextCountInSlice++;
+                      }
+                      hits.push({position: position, length: word.length});
+                      var wordEnd = position + word.length;
+
+                      // move to next position of hit
+
+                      index.pop();
+                      while (index.length != 0) {
+                        item = index[index.length - 1];
+                        position = item.position;
+                        word = item.word;
+                        if (wordEnd > position) {
+                          index.pop();
+                        } else {
+                          break;
+                        }
+                      }
+                    }
+                    searchTextCount += searchTextCountInSlice;
+                    return {
+                      hits: hits,
+                      start: start,
+                      end: end,
+                      searchTextCount: searchTextCountInSlice
+                    };
+                  }
+
+                  var slicesOfTitle = [];
+                  if (indexOfTitle.length != 0) {
+                    slicesOfTitle.push(mergeIntoSlice(title, 0, title.length, indexOfTitle));
+                  }
+
+                  var slicesOfContent = [];
+                  while (indexOfContent.length != 0) {
+                    var item = indexOfContent[indexOfContent.length - 1];
+                    var position = item.position;
+                    var word = item.word;
+                    // cut out 100 characters
+                    var start = position - 20;
+                    var end = position + 80;
+                    if(start < 0){
+                      start = 0;
+                    }
+                    if (end < position + word.length) {
+                      end = position + word.length;
+                    }
+                    if(end > content.length){
+                      end = content.length;
+                    }
+                    slicesOfContent.push(mergeIntoSlice(content, start, end, indexOfContent));
+                  }
+
+                  // sort slices in content by search text's count and hits' count
+
+                  slicesOfContent.sort(function (sliceLeft, sliceRight) {
+                    if (sliceLeft.searchTextCount !== sliceRight.searchTextCount) {
+                      return sliceRight.searchTextCount - sliceLeft.searchTextCount;
+                    } else if (sliceLeft.hits.length !== sliceRight.hits.length) {
+                      return sliceRight.hits.length - sliceLeft.hits.length;
+                    } else {
+                      return sliceLeft.start - sliceRight.start;
+                    }
+                  });
+
+                  // select top N slices in content
+
+                  var upperBound = parseInt('1');
+                  if (upperBound >= 0) {
+                    slicesOfContent = slicesOfContent.slice(0, upperBound);
+                  }
+
+                  // highlight title and content
+
+                  function highlightKeyword(text, slice) {
+                    var result = '';
+                    var prevEnd = slice.start;
+                    slice.hits.forEach(function (hit) {
+                      result += text.substring(prevEnd, hit.position);
+                      var end = hit.position + hit.length;
+                      result += '<b class="search-keyword">' + text.substring(hit.position, end) + '</b>';
+                      prevEnd = end;
+                    });
+                    result += text.substring(prevEnd, slice.end);
+                    return result;
+                  }
+
+                  var resultItem = '';
+
+                  if (slicesOfTitle.length != 0) {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + highlightKeyword(title, slicesOfTitle[0]) + "</a>";
+                  } else {
+                    resultItem += "<li><a href='" + articleUrl + "' class='search-result-title'>" + title + "</a>";
+                  }
+
+                  slicesOfContent.forEach(function (slice) {
+                    resultItem += "<a href='" + articleUrl + "'>" +
+                      "<p class=\"search-result\">" + highlightKeyword(content, slice) +
+                      "...</p>" + "</a>";
+                  });
+
+                  resultItem += "</li>";
+                  resultItems.push({
+                    item: resultItem,
+                    searchTextCount: searchTextCount,
+                    hitCount: hitCount,
+                    id: resultItems.length
+                  });
+                }
+              })
+            };
+            if (keywords.length === 1 && keywords[0] === "") {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-search fa-5x" /></div>'
+            } else if (resultItems.length === 0) {
+              resultContent.innerHTML = '<div id="no-result"><i class="fa fa-frown-o fa-5x" /></div>'
+            } else {
+              resultItems.sort(function (resultLeft, resultRight) {
+                if (resultLeft.searchTextCount !== resultRight.searchTextCount) {
+                  return resultRight.searchTextCount - resultLeft.searchTextCount;
+                } else if (resultLeft.hitCount !== resultRight.hitCount) {
+                  return resultRight.hitCount - resultLeft.hitCount;
+                } else {
+                  return resultRight.id - resultLeft.id;
+                }
+              });
+              var searchResultList = '<ul class=\"search-result-list\">';
+              resultItems.forEach(function (result) {
+                searchResultList += result.item;
+              })
+              searchResultList += "</ul>";
+              resultContent.innerHTML = searchResultList;
+            }
+          }
+
+          if ('auto' === 'auto') {
+            input.addEventListener('input', inputEventFunction);
+          } else {
+            $('.search-icon').click(inputEventFunction);
+            input.addEventListener('keypress', function (event) {
+              if (event.keyCode === 13) {
+                inputEventFunction();
+              }
+            });
+          }
+
+          // remove loading animation
+          $(".local-search-pop-overlay").remove();
+          $('body').css('overflow', '');
+
+          proceedsearch();
+        }
+      });
+    }
+
+    // handle and trigger popup window;
+    $('.popup-trigger').click(function(e) {
+      e.stopPropagation();
+      if (isfetched === false) {
+        searchFunc(path, 'local-search-input', 'local-search-result');
+      } else {
+        proceedsearch();
+      };
+    });
+
+    $('.popup-btn-close').click(onPopupClose);
+    $('.popup').click(function(e){
+      e.stopPropagation();
+    });
+    $(document).on('keyup', function (event) {
+      var shouldDismissSearchPopup = event.which === 27 &&
+        $('.search-popup').is(':visible');
+      if (shouldDismissSearchPopup) {
+        onPopupClose();
+      }
+    });
+  </script>
+
+
+
+
+
+  
+
+  
+  <script src="https://cdn1.lncld.net/static/js/av-core-mini-0.6.1.js"></script>
+  <script>AV.initialize("NXaprDjb1bTKqT7edHYWKidU-gzGzoHsz", "SyncKG852fIyQ8vPMOC3XaEN");</script>
+  <script>
+    function showTime(Counter) {
+      var query = new AV.Query(Counter);
+      var entries = [];
+      var $visitors = $(".leancloud_visitors");
+
+      $visitors.each(function () {
+        entries.push( $(this).attr("id").trim() );
+      });
+
+      query.containedIn('url', entries);
+      query.find()
+        .done(function (results) {
+          var COUNT_CONTAINER_REF = '.leancloud-visitors-count';
+
+          if (results.length === 0) {
+            $visitors.find(COUNT_CONTAINER_REF).text(0);
+            return;
+          }
+
+          for (var i = 0; i < results.length; i++) {
+            var item = results[i];
+            var url = item.get('url');
+            var time = item.get('time');
+            var element = document.getElementById(url);
+
+            $(element).find(COUNT_CONTAINER_REF).text(time);
+          }
+          for(var i = 0; i < entries.length; i++) {
+            var url = entries[i];
+            var element = document.getElementById(url);
+            var countSpan = $(element).find(COUNT_CONTAINER_REF);
+            if( countSpan.text() == '') {
+              countSpan.text(0);
+            }
+          }
+        })
+        .fail(function (object, error) {
+          console.log("Error: " + error.code + " " + error.message);
+        });
+    }
+
+    function addCount(Counter) {
+      var $visitors = $(".leancloud_visitors");
+      var url = $visitors.attr('id').trim();
+      var title = $visitors.attr('data-flag-title').trim();
+      var query = new AV.Query(Counter);
+
+      query.equalTo("url", url);
+      query.find({
+        success: function(results) {
+          if (results.length > 0) {
+            var counter = results[0];
+            counter.fetchWhenSave(true);
+            counter.increment("time");
+            counter.save(null, {
+              success: function(counter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(counter.get('time'));
+              },
+              error: function(counter, error) {
+                console.log('Failed to save Visitor num, with error message: ' + error.message);
+              }
+            });
+          } else {
+            var newcounter = new Counter();
+            /* Set ACL */
+            var acl = new AV.ACL();
+            acl.setPublicReadAccess(true);
+            acl.setPublicWriteAccess(true);
+            newcounter.setACL(acl);
+            /* End Set ACL */
+            newcounter.set("title", title);
+            newcounter.set("url", url);
+            newcounter.set("time", 1);
+            newcounter.save(null, {
+              success: function(newcounter) {
+                var $element = $(document.getElementById(url));
+                $element.find('.leancloud-visitors-count').text(newcounter.get('time'));
+              },
+              error: function(newcounter, error) {
+                console.log('Failed to create');
+              }
+            });
+          }
+        },
+        error: function(error) {
+          console.log('Error:' + error.code + " " + error.message);
+        }
+      });
+    }
+
+    $(function() {
+      var Counter = AV.Object.extend("Counter");
+      if ($('.leancloud_visitors').length == 1) {
+        addCount(Counter);
+      } else if ($('.post-title-link').length > 1) {
+        showTime(Counter);
+      }
+    });
+  </script>
+
+
+
+  
+<script>
+(function(){
+    var bp = document.createElement('script');
+    var curProtocol = window.location.protocol.split(':')[0];
+    if (curProtocol === 'https') {
+        bp.src = 'https://zz.bdstatic.com/linksubmit/push.js';        
+    }
+    else {
+        bp.src = 'http://push.zhanzhang.baidu.com/push.js';
+    }
+    var s = document.getElementsByTagName("script")[0];
+    s.parentNode.insertBefore(bp, s);
+})();
+</script>
+
+
+  
+  <script type="text/javascript">
+  wpac_init = window.wpac_init || [];
+  wpac_init.push({widget: 'Rating', id: 6160,
+    el: 'wpac-rating',
+    color: 'fc6423'
+  });
+  (function() {
+    if ('WIDGETPACK_LOADED' in window) return;
+    WIDGETPACK_LOADED = true;
+    var mc = document.createElement('script');
+    mc.type = 'text/javascript';
+    mc.async = true;
+    mc.src = '//embed.widgetpack.com/widget.js';
+    var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(mc, s.nextSibling);
+  })();
+  </script>
+
+
+  
+  
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Config({
+        tex2jax: {
+          inlineMath: [ ['$','$'], ["\\(","\\)"]  ],
+          processEscapes: true,
+          skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+        }
+      });
+    </script>
+
+    <script type="text/x-mathjax-config">
+      MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for (i=0; i < all.length; i += 1) {
+          all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+      });
+    </script>
+    <script type="text/javascript" src="//cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML"></script>
+  
+
+
+  
+
+  
+
+</body>
+</html>

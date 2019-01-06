@@ -70,7 +70,7 @@
 <link href="/css/main.css?v=5.1.1" rel="stylesheet" type="text/css">
 
 
-  <meta name="keywords" content="钢条切割,算法,算法导论,">
+  <meta name="keywords" content="算法,算法导论,钢条切割,">
 
 
 
@@ -89,19 +89,19 @@
 
 
 <meta name="description" content="动态规划简介(算法导论)动态规划方法通常用来求解最优化问题。这类问题可以有很多可行解，每个解都有一个值，我们希望寻找具有最优值(最小值或最大值)的解。我们称这样的解为问题的一个最优解，但是不是唯一的最优解，因为可能有多个解都能达到最优值。 我们通常按如下4个步骤来设计一个动态规划算法：  刻画一个最优解的结构特征。 递归地定义最优解的值。 计算最优解的值，通常采用自底向上的方法。 利用计算出的信息">
-<meta name="keywords" content="钢条切割,算法,算法导论">
+<meta name="keywords" content="算法,算法导论,钢条切割">
 <meta property="og:type" content="article">
 <meta property="og:title" content="动态规划之钢条切割">
 <meta property="og:url" content="https://lemon2013.github.io/2017/05/31/dynamic-programming/index.html">
 <meta property="og:site_name" content="柠檬">
 <meta property="og:description" content="动态规划简介(算法导论)动态规划方法通常用来求解最优化问题。这类问题可以有很多可行解，每个解都有一个值，我们希望寻找具有最优值(最小值或最大值)的解。我们称这样的解为问题的一个最优解，但是不是唯一的最优解，因为可能有多个解都能达到最优值。 我们通常按如下4个步骤来设计一个动态规划算法：  刻画一个最优解的结构特征。 递归地定义最优解的值。 计算最优解的值，通常采用自底向上的方法。 利用计算出的信息">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:image" content="http://oqo3t056d.bkt.clouddn.com/timecost2.png">
-<meta property="og:updated_time" content="2017-07-18T07:43:51.821Z">
+<meta property="og:image" content="https://lemon2013.github.io/img/timecost2.png">
+<meta property="og:updated_time" content="2019-01-06T05:09:51.484Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="动态规划之钢条切割">
 <meta name="twitter:description" content="动态规划简介(算法导论)动态规划方法通常用来求解最优化问题。这类问题可以有很多可行解，每个解都有一个值，我们希望寻找具有最优值(最小值或最大值)的解。我们称这样的解为问题的一个最优解，但是不是唯一的最优解，因为可能有多个解都能达到最优值。 我们通常按如下4个步骤来设计一个动态规划算法：  刻画一个最优解的结构特征。 递归地定义最优解的值。 计算最优解的值，通常采用自底向上的方法。 利用计算出的信息">
-<meta name="twitter:image" content="http://oqo3t056d.bkt.clouddn.com/timecost2.png">
+<meta name="twitter:image" content="https://lemon2013.github.io/img/timecost2.png">
 
 
 
@@ -475,7 +475,7 @@
 <h3 id="递归定义"><a href="#递归定义" class="headerlink" title="递归定义"></a>递归定义</h3><p>将钢条从左边切割长度为 $i$ 的一段，右边剩下长度为 $n-1$ ,假定左边钢条不再切割，只需对右边钢条继续切割，使用递归的思想求解。可得到以下递归版本定义<br>$$<br>r_n = \max(p_i+r_{n-i}),1\leq i \leq n.<br>$$<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">getCutRod</span><span class="params">(<span class="keyword">long</span>[] p, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">if</span> (n == <span class="number">0</span>)</span><br><span class="line">			<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">long</span> q = Long.MIN_VALUE;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">			<span class="keyword">if</span>(i==<span class="number">11</span>)&#123;</span><br><span class="line">				System.out.println(i);</span><br><span class="line">			&#125;</span><br><span class="line">			q =  Math.max(q, p[i] + getCutRod(p, n - i));</span><br><span class="line">		&#125;</span><br><span class="line">		<span class="keyword">return</span> q;</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
 <p>其中数组p表示价格数组，数组大小为n+1，初始化如下<br>if(n&lt;=10),数组大小定义为11，初始化如下<br>p[0] = 0;<br>p[1] = 1;<br>p[2] = 5;<br>p[3] = 8;<br>p[4] = 9;<br>p[5] = 10;<br>p[6] = 17;<br>p[7] = 17;<br>p[8] = 20;<br>p[9] = 24;<br>p[10] = 30;<br>其他情况，数组大小根据输入的n值大小动态确定，前11个值初始化为上面所提，其他为默认值0<br>但是该版本的运行时间随着n的增加呈指数增长，后面会给出对比曲线。</p>
 <h3 id="计算最优值"><a href="#计算最优值" class="headerlink" title="计算最优值"></a>计算最优值</h3><p>我们采用自底向上的动态规划的方法得到更有效的算法。<br><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">public</span> <span class="keyword">static</span> <span class="keyword">long</span> <span class="title">getCutRodDP</span><span class="params">(<span class="keyword">long</span>[] p, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">		<span class="keyword">long</span>[] dp = <span class="keyword">new</span> <span class="keyword">long</span>[n + <span class="number">1</span>];</span><br><span class="line">		<span class="keyword">int</span>[] length = <span class="keyword">new</span> <span class="keyword">int</span>[n + <span class="number">1</span>];</span><br><span class="line">		dp[<span class="number">0</span>] = <span class="number">0</span>;</span><br><span class="line">		<span class="keyword">for</span> (<span class="keyword">int</span> i = <span class="number">1</span>; i &lt;= n; i++) &#123;</span><br><span class="line">			<span class="keyword">long</span> q = Long.MIN_VALUE;</span><br><span class="line">			<span class="keyword">for</span> (<span class="keyword">int</span> j = <span class="number">1</span>; j &lt;= i; j++) &#123;</span><br><span class="line">				<span class="keyword">long</span> temp = q;</span><br><span class="line">				q = j &lt; p.length ? Math.max(q, p[j] + dp[i - j]) : Math.max(q, dp[j] + dp[i - j]);</span><br><span class="line">				<span class="keyword">if</span> (temp &lt; q) &#123;</span><br><span class="line">					length[i] = j;</span><br><span class="line">				&#125;</span><br><span class="line">			&#125;</span><br><span class="line">			dp[i] = q;</span><br><span class="line">		&#125;</span><br><span class="line">		 <span class="keyword">return</span> dp[n];</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure></p>
-<p>p表示价格表，如本文中应该为p的数组大小应该为11。<br>动态规划版本与递归版本时间消耗对比如下,可以明显看到递归版本的时间呈指数增长<br><img src="http://oqo3t056d.bkt.clouddn.com/timecost2.png" alt="首页"><br>当钢条长度增长到35时，鄙人渣渣电脑就跑不动了，以下表示动态规划算法版本的时间消耗表</p>
+<p>p表示价格表，如本文中应该为p的数组大小应该为11。<br>动态规划版本与递归版本时间消耗对比如下,可以明显看到递归版本的时间呈指数增长<br><img src="/img/timecost2.png" alt="首页"><br>当钢条长度增长到35时，鄙人渣渣电脑就跑不动了，以下表示动态规划算法版本的时间消耗表</p>
 <table>
 <thead>
 <tr>
@@ -576,11 +576,11 @@
       
         <div class="post-tags">
           
-            <a href="/tags/钢条切割/" rel="tag"># 钢条切割</a>
-          
             <a href="/tags/算法/" rel="tag"># 算法</a>
           
             <a href="/tags/算法导论/" rel="tag"># 算法导论</a>
+          
+            <a href="/tags/钢条切割/" rel="tag"># 钢条切割</a>
           
         </div>
       
@@ -710,7 +710,7 @@
           
             <div class="site-state-item site-state-posts">
               <a href="/archives">
-                <span class="site-state-item-count">12</span>
+                <span class="site-state-item-count">13</span>
                 <span class="site-state-item-name">日志</span>
               </a>
             </div>
@@ -732,7 +732,7 @@
             
             <div class="site-state-item site-state-tags">
               <a href="/tags/index.html">
-                <span class="site-state-item-count">28</span>
+                <span class="site-state-item-count">31</span>
                 <span class="site-state-item-name">标签</span>
               </a>
             </div>
